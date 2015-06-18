@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Multi-Modal Speech Visualization</title>
+    <link rel="stylesheet" href="css/balloon.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websockets rely on Javascript being enabled. Please enable Javascript and reload this page!</h2>
+    </noscript>
+
+
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <h3 class="text-center">
+                    Frameworking!
+                </h3>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <!-- Video Handler WebRTC -->
+                <div id="video-container">
+                    <h4>サンプル文字列</h4>
+                    <p>クラウドコンピューティング</p>
+                    <p>フレームワーク</p>
+                    <p>カナダ</p>
+                </div>
+
+                <p>
+                    <span id="add_detail_mode" class="button-wrap"><a href="#" class="button button-circle button-primary" >add mode</a></span>
+                    <span id="add_stt_mode" class="button-wrap"><a href="#" class="button button-circle button-primary" >add mode</a></span>
+                </p>
+
+            </div>
+            <div class="col-md-6 column">
+                <!-- Text Log Area -->
+                <div id="console-container">
+                    <div id="view1"></div>
+                    <div id="view2"></div>
+                </div>
+                <div id="word-explanation-area">
+                    <p><span id="detail-area"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/buttons.js"></script>
+    <script src="js/fw_mmsv.js"></script>
+    <script src="js/dictionary_mode.js"></script>
+    <script src="js/stt_mode.js"></script>
+    <script src="js/websocket.js"></script>
+    <script>
+        //$mmsvs.initialize();
+        // $('#connectBtn').click(function() {
+
+            //})
+    </script>
+</body>
+</html>
