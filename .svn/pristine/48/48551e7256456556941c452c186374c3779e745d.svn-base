@@ -1,0 +1,70 @@
+        input#chat {
+            width: 410px
+        }
+
+        #console-container {
+/*            width: 400px;*/
+            text-align: center;
+        }
+
+        #video-container {
+            height: 650px;
+        }
+
+        #console {
+            border: 1px solid #CCCCCC;
+            border-right-color: #999999;
+            border-bottom-color: #999999;
+            height: 570px;
+            overflow-y: scroll;
+            padding: 5px;
+            width: 100%;
+        }
+
+        #word-explanation-area {
+            width:100%;
+            margin:0 0 10px 0;
+            padding:0;
+            border:1px solid #aaaaaa;
+        }
+
+        #console p {
+            padding: 0;
+            margin: 0;
+        }
+
+        .balloon{
+            margin: 5px auto;
+        }
+
+        .wrap-center{
+            text-align: center;            
+        }
+        .wrap-right{
+            text-align: right;            
+        }
+        .wrap-left{
+            text-align: left;            
+        }
+
+        body {
+            margin:0;
+            _overflow:hidden;
+            padding:0;
+        }
+
+        video {
+/*            max-width: 100%;
+            height: auto;
+*/
+            max-height: 300px;
+            width: auto;
+        }
+
+        .col-md-6 {
+            text-align: center;
+        }
+
+
+
+

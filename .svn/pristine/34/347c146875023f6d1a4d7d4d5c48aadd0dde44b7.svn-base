@@ -1,0 +1,8 @@
+div {
+	border: 1px solid black;
+}
+
+
+div.modal {
+	border: 1px solid red;
+}

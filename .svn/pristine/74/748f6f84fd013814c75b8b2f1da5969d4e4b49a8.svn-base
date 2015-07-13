@@ -1,0 +1,29 @@
+first commit
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+#	new file:   css/balloon.css
+#	new file:   css/bootstrap-theme.css
+#	new file:   css/bootstrap-theme.min.css
+#	new file:   css/bootstrap.css
+#	new file:   css/bootstrap.min.css
+#	new file:   css/buttons.css
+#	new file:   css/style.css
+#	new file:   index.html
+#	new file:   js/bootstrap.min.js
+#	new file:   js/buttons.js
+#	new file:   js/dictionary_mode.js
+#	new file:   js/fw_mmsv.js
+#	new file:   js/html5shiv.js
+#	new file:   js/jquery.min.js
+#	new file:   js/jquery.xdomainajax.js
+#	new file:   js/less-1.3.3.min.js
+#	new file:   js/mmsvs.js
+#	new file:   js/peer.min.js
+#	new file:   js/stt_mode.js
+#	new file:   js/websocket.js
+#

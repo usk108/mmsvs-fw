@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="css/default.css">
+		<title>New Web Project</title>
+	</head>
+
+	<body>
+		<div id="mview"></div>
+		zz
+
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="mmsvs.js"></script>
+
+	</body>
+</html>
