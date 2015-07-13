@@ -78,7 +78,8 @@ var FaceDisplayMode4Speaker = {
 	}
 
 	//FWから呼ばれる
-	stream : function() {
+	stream : f
+	\unction() {
 		// console.log('streaming');
 		// console.log(this);
 		 var self = FaceDisplayMode4Speaker;
