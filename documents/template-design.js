@@ -41,8 +41,11 @@ var xModal = {
 		console.log('xmodal: stream');
 	},
 	// websocket受信処理
-	stream: function(){
+	receive: function(){
 		console.log('xmodal: receive');
+	},
+	arrangeView: function(){
+		console.log('xmodal: arrange view');
 	}
 };
 
@@ -54,6 +57,7 @@ var FW = {
 	subscribers: {
 		stt: []
 	},
+	// todo: localstorageで管理
 	dataFromModes: [
 		{mode: stt, date:"2015-10-21 14:40:56:12", data:"こんにちは"},
 		{mode: stt, date:"2015-10-21 14:40:56:12", data:"こんにちは"},
@@ -66,7 +70,7 @@ var FW = {
 		this.modes.push(m);
 
 		// モードごとのviewの作成
-		m.view = this.createNewFrame(m.name);
+		m.view = this.createNewFrame(m.name, m.stable_config);
 
 		// モードごとに初期処理
 		m.init();
@@ -89,27 +93,41 @@ var FW = {
 		}, m.config.streamInterval);
 	},
 
-	//部品作成
+	//共通部分のview作成
 	createNewFrame: function(name, stable_config) {
-		var mainf = $('<div>').attr('class', 'modal');
+		var mainf = $('<div>')
+		.attr('class', 'main_view')
+		.attr('width', stable_config.view.width)
+		.attr('height', stable_config.view.height);
+
 		var cbar = $('<div>')
-		.append($('<input>').attr('type', 'button').attr('value', 'run'))
-		.append($('<input>').attr('type', 'button').attr('value', 'stop'))
 		.append($('<input>').attr('type', 'button').attr('value', 'config'));
-		var view = $('<div>').attr('id', name).append(mainf).append(cbar);
+		if(stable_config.btn.needRun)
+			cbar.append($('<input>').attr('type', 'button').attr('value', 'run'))
+		if(stable_config.btn.needStop)
+			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop'))
+
+		var view = $('<div>').attr('id', name).append(cbar).append(mainf);
 		view.appendTo('#mview');
 		return mainf;
 	},
 
+	//subscriberからの呼び出しに応じてpublisherの購読者リストにsubsriberを追加
 	register: function(publisher, subscriber){
 		if(subscriber in this.subscribers[publisher])
 			return false;
 		this.subscribers[publisher].push(subscribers);
 	},
 
-	publish: function(modename, data){
-		//save localstrage
-		for (var i in this.subscribers.modename){
+	//publisherからの呼び出しに応じてその購読者リストにデータを配信
+	publish: function(publisher, data){
+		//TODO: save localstrage
+		if(publisher in this.subscribers)
+			this.dataFromModes[publisher] = [data];
+		else
+			this.dataFromModes[publisher].push(data);
+
+		for (var i in this.subscribers[publisher]){
 			this.subscribers[i].notify(data);
 		}
 	}

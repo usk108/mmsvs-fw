@@ -127,9 +127,3 @@ function add_fd4spkr_mode_area(view_index){
 		FaceDisplayMode4Speaker.run();
 	});
 }
-
-
-
-
-
-
