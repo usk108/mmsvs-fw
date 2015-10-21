@@ -113,8 +113,8 @@ var FW = {
 // プラグインを足すだけ（アカウントに紐付いてロードする）
 var conf1 = {streamInterval: 1000};
 var conf2 = {streamInterval: 300};
-FW.addModal(xModal, conf1);
-FW.addModal(video, conf2);
+// FW.addModal(xModal, conf1);
+// FW.addModal(video, conf2);
 /*
 function ModalLoader(var modalName){
 	m =
