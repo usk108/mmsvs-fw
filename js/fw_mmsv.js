@@ -1,129 +1,118 @@
-var ModeConfig = {
-	//view1はinitでセットするようにするか
-	//そもそもこんな形でデータ持たせることできるのかわからんけど
-	output_area: null,
-	control_bar: null,
-	init : function(view_index) {
-		this.output_area = $('.output_area', $('#view'+view_index));
-		this.control_bar = $('.control_bar', $('#view'+view_index));
+///////////////////
+// FW部分
+var FW = {
+	modes: [],
+	subscribers: {},
+	// todo: localstorageで管理
+	dataFromModes: [],
+
+	addMode: function(m, config) {
+		//与えられた設定をモードに追加
+		m.config = config;
+		this.modes.push(m);
+
+		// モードごとのviewの作成
+		m.view = this.createNewFrame(m.name, m.stable_config);
+		m.output_area = $('.main_view', m.view);
+
+
+		// モードごとに初期処理
+		m.init();
+
+		// buttonへのイベント貼り付け
+		$('.run', $('#' + m.name)).click(function() {
+			m.run();
+			m.state = 'running';
+		});
+		$('.stop', $('#' + m.name)).click(function() {
+			m.stop();
+			m.state = 'waiting';
+		});
+
+		// streamの設定
+		if(m.config.streamInterval != null){
+			setInterval(function() {
+				if (m.state == 'running') {
+					m.stream();
+				}
+			}, m.config.streamInterval);
+		}
+
+		console.log(m);
+	},
+
+	//共通部分のview作成
+	createNewFrame: function(name, stable_config) {
+		var mainf = $('<div>')
+		.attr('class', 'main_view')
+		.attr('id', name)
+		.attr('width', stable_config.view.width)
+		.attr('height', stable_config.view.height);
+		//TODO: width, heightはcssに分離
+
+		var cbar = $('<div>')
+		.append($('<input>').attr('type', 'button').attr('value', 'config'));
+		if(stable_config.btn.needRun)
+			cbar.append($('<input>').attr('type', 'button').attr('value', 'run').attr('class', 'run'))
+		if(stable_config.btn.needStop)
+			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
+
+		var view = $('<div>').attr('id', name).append(mainf).append(cbar);
+		view.appendTo('#modes-container');
+		return view;
+	},
+
+	//subscriberからの呼び出しに応じてpublisherの購読者リストにsubsriberを追加
+	register: function(publisher, subscriber){
+		if(subscriber in this.subscribers[publisher])
+			return false;
+		this.subscribers[publisher].push(subscribers);
+	},
+
+	//publisherからの呼び出しに応じてその購読者リストにデータを配信
+	publish: function(publisher, data){
+		//TODO: save localstrage
+		if(publisher in this.subscribers)
+			this.dataFromModes[publisher] = [data];
+		else
+			this.dataFromModes[publisher].push(data);
+
+		for (var i in this.subscribers[publisher]){
+			this.subscribers[i].notify(data);
+		}
 	}
 
 };
 
 
+
+
+
+///////////////////
+// モード追加ボタンの処理
+
 //用語解説モードが追加されたら
 $('#add_detail_mode').click(function() {
 	console.log("adding Dictionay");
 	//共通のhtmlタグを追加
-	//TODO: 現在のmodeの数を渡して調整
-	add_dictionay_mode_area(1);
-	//modes[0].run(); // 0はSTTmodalである
-	ModeConfig.init(1);
-	DictionaryMode.init(ModeConfig);
-
-});
-
-
-//TODO: 現在のmodeの数を渡して調整
-//いまは分割されview1,view2が存在すると仮定する
-function add_dictionay_mode_area(view_index){
-	var op_ara = $('<div>').attr('class', 'output_area');
-	var ctrl_bar = $('<div>').attr('class', 'control_bar');
-	var btn = $('<a>').attr('class', 'button button-pill button-action').attr('id', 'runview'+view_index).html('run');
-	//var btn = $('<a>').attr('class', 'button button-pill button-action').attr('id', 'runview1').attr('href', '#').attr("onclick","DictionaryMode.run();").html('run');
-	$('#view'+view_index).append(op_ara).append(ctrl_bar.append(btn));
-
-	//ボタンクリックアクションを追加
-	$('#runview'+view_index).click(function() {
-		console.log('button is pushed!');
-		DictionaryMode.run();
-	});
-}
-
-
-
-//STTモードが追加されたら
-$('#add_stt_mode').click(function() {
-	console.log("adding STT");
-	//共通のhtmlタグを追加
-	//TODO: 現在のmodeの数を渡して調整
-	add_stt_mode_area(2);
-	//modes[0].run(); // 0はSTTmodalである
-	ModeConfig.init(2);
-	STTMode.init(ModeConfig);
-
+	var conf = {streamInterval: null};
+	FW.addMode(mode_dictionary, conf);
 });
 
 
 
-//STTモードが追加されたら
-$('#add_fd4obsr_mode').click(function() {
-	console.log("adding fd4obsr");
-	//共通のhtmlタグを追加
-	//TODO: 現在のmodeの数を渡して調整
-	add_fd4obsr_mode_area(3);
-	//modes[0].run(); // 0はSTTmodalである
-	ModeConfig.init(3);
-	FaceDisplayMode4Observer.init(ModeConfig);
-
-});
-
-//STTモードが追加されたら
-$('#add_fd4spkr_mode').click(function() {
-	console.log("adding fd4spkr");
-	//共通のhtmlタグを追加
-	//TODO: 現在のmodeの数を渡して調整
-	add_fd4spkr_mode_area(4);
-	//modes[0].run(); // 0はSTTmodalである
-	ModeConfig.init(4);
-	FaceDisplayMode4Speaker.init(ModeConfig);
-
-});
-
-//TODO: 現在のmodeの数を渡して調整
-//いまは分割されview1,view2が存在すると仮定する
-function add_fd4obsr_mode_area(view_index){
-	var op_ara = $('<div>').attr('class', 'output_area');
-	var ctrl_bar = $('<div>').attr('class', 'control_bar');
-	var btn = $('<a>').attr('class', 'button button-pill button-action').attr('id', 'runview'+view_index).html('run');
-
-	var video = $('<video>').attr('id', 'v').attr('width', '320').attr('height', '240');
-	video[0].autoplay = true;
-	var canvas = $('<canvas>').attr('id', 'c').attr('width', '320').attr('height', '240');
-
-	var consl = $('<div>').attr('id', 'console').append(video).append(canvas);
-	var console_container = $('<div>').attr('id', 'console-container').append(consl);
-
-	$('#view'+view_index).append(console_container).append(op_ara).append(ctrl_bar.append(btn));
-
-	//ボタンクリックアクションを追加
-	$('#runview'+view_index).click(function() {
-		console.log('button for face4observer is pushed!');
-		FaceDisplayMode4Observer.run();
-	});
-}
 
 
-//TODO: 現在のmodeの数を渡して調整
-//いまは分割されview1,view2が存在すると仮定する
-function add_fd4spkr_mode_area(view_index){
-	var op_ara = $('<div>').attr('class', 'output_area');
-	var ctrl_bar = $('<div>').attr('class', 'control_bar');
-	var btn = $('<a>').attr('class', 'button button-pill button-action').attr('id', 'runview'+view_index).html('run');
 
-	var video = $('<video>').attr('id', 'v').attr('width', '320').attr('height', '240');
-	video[0].autoplay = true;
-	var canvas = $('<canvas>').attr('id', 'c').attr('width', '320').attr('height', '240');
 
-	var consl = $('<div>').attr('id', 'console').append(video).append(canvas);
-	var console_container = $('<div>').attr('id', 'console-container').append(consl);
-	//var btn = $('<a>').attr('class', 'button button-pill button-action').attr('id', 'runview1').attr('href', '#').attr("onclick","DictionaryMode.run();").html('run');
 
-	$('#view'+view_index).append(console_container).append(op_ara).append(ctrl_bar.append(btn));
 
-	//ボタンクリックアクションを追加
-	$('#runview'+view_index).click(function() {
-		console.log('button for face4speaker is pushed!');
-		FaceDisplayMode4Speaker.run();
-	});
-}
+
+
+
+
+
+
+
+
+

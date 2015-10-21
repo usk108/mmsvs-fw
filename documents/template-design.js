@@ -18,6 +18,11 @@ var xModal = {
 			needStop:false	//Stopボタンが必要か
 		}
 	},
+	state: 'waiting',
+	// 初期処理
+	init: function(){
+		console.log('xmodal: init');
+	},
 	// メイン処理
 	run: function(){
 		console.log('xmodal: run');
@@ -27,10 +32,6 @@ var xModal = {
 	stop: function(){
 		console.log('xmodal: stop');
 		this.view.text('　');
-	},
-	// 初期処理
-	init: function(){
-		console.log('xmodal: init');
 	},
 	// モード独自のイベント処理初期設定
 	attachEvents: function(){
@@ -76,11 +77,11 @@ var FW = {
 		m.init();
 
 		// buttonへのイベント貼り付け
-		$('#' + m.name).find('input[value=run]').click(function() {
+		$('.run', $('#' + m.name)).click(function() {
 			m.run();
 			m.state = 'running';
 		});
-		$('#' + m.name).find('input[value=stop]').click(function() {
+		$('.stop', $('#' + m.name)).click(function() {
 			m.stop();
 			m.state = '';
 		});
@@ -97,18 +98,19 @@ var FW = {
 	createNewFrame: function(name, stable_config) {
 		var mainf = $('<div>')
 		.attr('class', 'main_view')
+		.attr('id', name)
 		.attr('width', stable_config.view.width)
 		.attr('height', stable_config.view.height);
 
 		var cbar = $('<div>')
 		.append($('<input>').attr('type', 'button').attr('value', 'config'));
 		if(stable_config.btn.needRun)
-			cbar.append($('<input>').attr('type', 'button').attr('value', 'run'))
+			cbar.append($('<input>').attr('type', 'button').attr('value', 'run').attr('class', 'run'))
 		if(stable_config.btn.needStop)
-			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop'))
+			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
 		var view = $('<div>').attr('id', name).append(cbar).append(mainf);
-		view.appendTo('#mview');
+		view.appendTo('#modes-container');
 		return mainf;
 	},
 
