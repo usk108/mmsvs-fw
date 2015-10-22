@@ -26,6 +26,23 @@ var mode_dictionary = {
 	init : function(modeconfig) {
 		this.attachEvents();
 	},
+	// モード独自のイベント処理初期設定
+	attachEvents: function(){
+		//文字列を選択したら文字を取得
+        var self = this;
+		document.body.addEventListener('mouseup', function(){
+			var sel = document.getSelection().toString();
+			if (!sel.length) return;
+			self.target_word = sel;
+			console.log('target text: ' + self.target_word);
+		});
+		document.body.addEventListener('keyup', function(){
+			var sel = document.getSelection().toString();
+			if (!sel.length) return;
+			self.target_word = sel;
+			console.log('target text: ' + self.target_word);
+		});
+	},
 	run : function() {
 	    console.log("selected word is "+this.target_word);
 
@@ -50,23 +67,6 @@ var mode_dictionary = {
                 self.target_word = '';
             }
         });
-	},
-	// モード独自のイベント処理初期設定
-	attachEvents: function(){
-		//文字列を選択したら文字を取得
-        var self = this;
-		document.body.addEventListener('mouseup', function(){
-			var sel = document.getSelection().toString();
-			if (!sel.length) return;
-			self.target_word = sel;
-			console.log('target text: ' + self.target_word);
-		});
-		document.body.addEventListener('keyup', function(){
-			var sel = document.getSelection().toString();
-			if (!sel.length) return;
-			self.target_word = sel;
-			console.log('target text: ' + self.target_word);
-		});
 	},
 	// websocket送信処理
 	stream: function(){

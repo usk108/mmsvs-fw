@@ -1,7 +1,25 @@
 // モーダルの定義の仕方
-var STTMode = {
+var mode_stt = {
+	// モード名
+	name: 'stt',
+	// 割り当てられたhtml
+	view: null,
+	// モード追加時に外部から与えられるモードの設定
+	config: null,
+	// 外部から変更できないモードの設定情報
+	stable_config: {
+		view: {
+			width: 560,	//画面の横幅
+			height: 600	//画面の縦幅
+		},
+		btn: {
+			needRun:true ,	//Runボタンが必要か
+			needStop:true 	//Stopボタンが必要か
+		}
+	},
+
+	//独自フィールド
 	output_area : null,
-	control_bar : null,
 	recognition : null,
 	nowRecognition : false,
 
@@ -21,19 +39,18 @@ var STTMode = {
 		//初期値falseだけど念のため明示的にfalseにする
 		this.nowRecognition = false;
 
-
 		this.attachEvents();
+		this.arrangeView();
 
 		console.log('initialized');
 	},
-
 	attachEvents : function() {
 		var self = this;
 		//これはなんのため？
 		this.recognition.onaudioend = function() {
-		   self.recognition.stop();
-		     //setButtonForPlay()
-		 };
+		    self.recognition.stop();
+		    //setButtonForPlay()
+		};
 
 		this.recognition.onresult = function(event) {
             console.log('result is ...');
@@ -44,17 +61,11 @@ var STTMode = {
 		            if (message != '') {
 		                //Chat.socket.send(message);
 		                self.sendToAll(message);
-		                console.log(message);
 		            }
 		        }
 		    }
 		};
 		console.log('attached');
-	},
-
-	finalize : function() {
-		//このモードの終了？
-
 	},
 
 	run : function() {
@@ -68,101 +79,47 @@ var STTMode = {
 	    this.nowRecognition = false;
 	},
 
-	receive : function(message) {
-	    if(this.nowRecognition == false){
-			return;
-	    }
-
-		//TODO: これやらなくていいようにする
-	    var messagedata = message.split(",");
+	receive : function(message, userName) {
+		console.log('receive in stt');
+		console.log('message: ' + message + ' userName: ' + userName);
+		console.log(this.nowRecognition);
 
 		var textLog = $('#console');
-		var p = $('<p>').attr('style','word-wrap: break-word;').html(messagedata[0]);
+		var p = $('<p>').attr('style','word-wrap: break-word;').html(message);
 		var div = $('<div>');
 		var wrapdiv = $('<div>');
 
-		if(messagedata[1] === ""){
-		    //吹き出し生成
-		    div.attr('class','balloon balloon-elip');
-		    //それを中央寄りにする
-		    wrapdiv.attr('class','wrap-center');
-		}else if(messagedata[1] === userName){
-		    div.attr('class','balloon balloon-2-right');
-		    wrapdiv.attr('class','wrap-right');
+		if(userName === userName){
+			//吹き出し生成
+			div.attr('class','balloon balloon-2-right');
+			//それを中央寄りにする
+			wrapdiv.attr('class','wrap-right');
 		}else{
-		    div.attr('class','balloon balloon-1-left');
-		    wrapdiv.attr('class','wrap-left');
+			div.attr('class','balloon balloon-1-left');
+			wrapdiv.attr('class','wrap-left');
 		}
 		div.append(p);
 		wrapdiv.append(div);
 		textLog.append(wrapdiv);
 
 		while (textLog.children().length > 25) {
-		    textLog.children().first().remove();
+			textLog.children().first().remove();
 		}
 		textLog.scroll(textLog.prop('scrollHeight'));
 	},
-
 	sendToAll : function(message) {
-		Chat.socket.send(message);
+		//todo:
+		console.log('sent to all from stt mode');
+		FW.sendToAll(this.name, message);
+		//Chat.socket.send(message);
 		console.log('sending' + message);
+	},
+	arrangeView: function(){
+		console.log('xmodal: arrange view');
+		var text_console = $('<div>')
+		.attr('id', 'console-container')
+		.append($('<div>').attr('id', 'console'));
+
+		$('.main_view', this.view).append(text_console);
 	}
-
 };
-
-
-
-
-
-// var TextLogArea = {};
-
-// TextLogArea.log = (function(message) {
-//     console.log(message);
-//     //0:message 1:user (""はシステム) 2:nullなら通常メッセージ，"usercheck"なら認証用
-//     var messagedata = message.split(",");
-
-//     console.log("0:"+messagedata[0]+" 1:"+messagedata[1]+" 2:"+messagedata[2])
-//     if(messagedata[0] === "reqconnect"){
-//         //deaf側からビデオチャットのために必要なidが送られてきた時
-//         //messagedata[0]にidが入っている
-//         //ただしtextに手動でユーザ名にreqconnectと入力されると誤動作が起きる
-//         var call = peer.call(messagedata[1], myStream);
-//     }else{
-//         var TextLog = document.getElementById('console');
-//         var p = document.createElement('p');
-//         p.style.wordWrap = 'break-word';
-//         p.innerHTML = messagedata[0];
-//         //p.innerHTML = message;
-
-//         var div = document.createElement('div');
-//         var wrapdiv = document.createElement('div');
-
-//         console.log("user is ",messagedata[1]);
-
-
-//         if(messagedata[1] === ""){
-//             //吹き出し生成
-//             div.setAttribute("class","balloon balloon-elip");
-//             //それを中央寄りにする
-//             wrapdiv.setAttribute("class","wrap-center");
-//         }else if(messagedata[1] === userName){
-//             div.setAttribute("class","balloon balloon-2-right");
-//             wrapdiv.setAttribute("class","wrap-right");
-//         }else{
-//             div.setAttribute("class","balloon balloon-1-left");
-//             wrapdiv.setAttribute("class","wrap-left");
-//         }
-//         div.appendChild(p);
-
-//         wrapdiv.appendChild(div);
-
-//         // TextLogArea.appendChild(p);
-//         //TextLog.appendChild(div);
-//         TextLog.appendChild(wrapdiv);
-//         while (TextLog.childNodes.length > 25) {
-//             TextLog.removeChild(TextLog.firstChild);
-//         }
-//         TextLog.scrollTop = TextLog.scrollHeight;
-//     }
-
-// });

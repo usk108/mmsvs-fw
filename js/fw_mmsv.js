@@ -1,12 +1,18 @@
 ///////////////////
 // FW部分
 var FW = {
+	userID: '',
 	modes: [],
 	subscribers: {},
 	// todo: localstorageで管理
 	dataFromModes: [],
 
 	addMode: function(m, config) {
+		if($.inArray(m, this.modes) > -1){
+			console.log('this mode has already added.');
+			return;
+		}
+
 		//与えられた設定をモードに追加
 		m.config = config;
 		this.modes.push(m);
@@ -45,7 +51,7 @@ var FW = {
 	createNewFrame: function(name, stable_config) {
 		var mainf = $('<div>')
 		.attr('class', 'main_view')
-		.attr('id', name)
+		.attr('id', 'main_view_' + name)
 		.attr('width', stable_config.view.width)
 		.attr('height', stable_config.view.height);
 		//TODO: width, heightはcssに分離
@@ -80,6 +86,27 @@ var FW = {
 		for (var i in this.subscribers[publisher]){
 			this.subscribers[i].notify(data);
 		}
+	},
+
+	//websocket通信のデータ形式
+	//'モード名 ユーザID データ内容'
+	//モード名の情報はFWが付与する
+
+	//websocketからデータを受け取る
+	receive: function(message){
+		console.log('receive in FW');
+		var messagedata = message.split(',');
+		for(var i in this.modes){
+			if(this.modes[i].name === messagedata[2]){
+				console.log()
+				this.modes[i].receive(messagedata[0], messagedata[1]);
+			}
+		}
+	},
+	//websocketにデータを送信
+	sendToAll: function(mode_name, message){
+		console.log('send to all from FW');
+		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	}
 
 };
@@ -92,11 +119,18 @@ var FW = {
 // モード追加ボタンの処理
 
 //用語解説モードが追加されたら
-$('#add_detail_mode').click(function() {
-	console.log("adding Dictionay");
+$('#add_mode_dictionary').click(function() {
+	console.log("adding Dictionary");
 	//共通のhtmlタグを追加
 	var conf = {streamInterval: null};
 	FW.addMode(mode_dictionary, conf);
+});
+
+$('#add_mode_stt').click(function() {
+	console.log("adding STT");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_stt, conf);
 });
 
 
