@@ -1,26 +1,77 @@
+////////////////////////
+// 開発者が作ったプラグインのテンプレ
+var xModal = {
+	// モード名
+	name: 'xModal',
+	// 割り当てられたhtml
+	view: null,
+	// モード追加時に外部から与えられるモードの設定
+	config: null,
+	// 外部から変更できないモードの設定情報
+	stable_config: {
+		view: {
+			width: 100,		//画面の横幅
+			height: 100		//画面の縦幅
+		},
+		btn: {
+			needRun:true ,	//Runボタンが必要か
+			needStop:false	//Stopボタンが必要か
+		}
+	},
+	state: 'waiting',
+	// 初期処理
+	init: function(){
+		console.log('xmodal: init');
+	},
+	// メイン処理
+	run: function(){
+		console.log('xmodal: run');
+		this.view.text(Math.random());
+	},
+	// メイン処理の停止処理
+	stop: function(){
+		console.log('xmodal: stop');
+		this.view.text('　');
+	},
+	// モード独自のイベント処理初期設定
+	attachEvents: function(){
+		console.log('xmodal: attach events');
+	},
+	// websocket送信処理
+	stream: function(){
+		console.log('xmodal: stream');
+	},
+	// websocket受信処理
+	receive: function(){
+		console.log('xmodal: receive');
+	},
+	arrangeView: function(){
+		console.log('xmodal: arrange view');
+	}
+};
+
+
 ///////////////////
 // FW部分
 var FW = {
-	userID: '',
 	modes: [],
-	subscribers: {},
+	subscribers: {
+		stt: []
+	},
 	// todo: localstorageで管理
-	dataFromModes: [],
+	dataFromModes: [
+		{mode: stt, date:"2015-10-21 14:40:56:12", data:"こんにちは"},
+		{mode: stt, date:"2015-10-21 14:40:56:12", data:"こんにちは"},
+		{mode: stt, date:"2015-10-21 14:40:56:12", data:"こんにちは"}
+	],
 
-	addMode: function(m, config) {
-		if($.inArray(m, this.modes) > -1){
-			console.log('this mode has already added.');
-			return;
-		}
-
+	addModal: function(m, config) {
 		//与えられた設定をモードに追加
 		m.config = config;
 		this.modes.push(m);
 
 		// モードごとのviewの作成
 		m.view = this.createNewFrame(m.name, m.stable_config);
-		m.output_area = $('.main_view', m.view);
-
 
 		// モードごとに初期処理
 		m.init();
@@ -32,29 +83,24 @@ var FW = {
 		});
 		$('.stop', $('#' + m.name)).click(function() {
 			m.stop();
-			m.state = 'waiting';
+			m.state = '';
 		});
 
 		// streamの設定
-		if(m.config.streamInterval != null){
-			setInterval(function() {
-				if (m.state == 'running') {
-					m.stream();
-				}
-			}, m.config.streamInterval);
-		}
-
-		console.log(m);
+		setInterval(function() {
+			if (m.state == 'running') {
+				m.stream();
+			}
+		}, m.config.streamInterval);
 	},
 
 	//共通部分のview作成
 	createNewFrame: function(name, stable_config) {
 		var mainf = $('<div>')
 		.attr('class', 'main_view')
-		.attr('id', 'main_view_' + name)
+		.attr('id', name)
 		.attr('width', stable_config.view.width)
 		.attr('height', stable_config.view.height);
-		//TODO: width, heightはcssに分離
 
 		var cbar = $('<div>')
 		.append($('<input>').attr('type', 'button').attr('value', 'config'));
@@ -63,9 +109,9 @@ var FW = {
 		if(stable_config.btn.needStop)
 			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
-		var view = $('<div>').attr('id', name).append(mainf).append(cbar);
+		var view = $('<div>').attr('id', name).append(cbar).append(mainf);
 		view.appendTo('#modes-container');
-		return view;
+		return mainf;
 	},
 
 	//subscriberからの呼び出しに応じてpublisherの購読者リストにsubsriberを追加
@@ -86,67 +132,6 @@ var FW = {
 		for (var i in this.subscribers[publisher]){
 			this.subscribers[i].notify(data);
 		}
-	},
-
-	//websocket通信のデータ形式
-	//'モード名 ユーザID データ内容'
-	//モード名の情報はFWが付与する
-
-	//websocketからデータを受け取る
-	receive: function(message){
-		console.log('receive in FW');
-		var messagedata = message.split(',');
-		for(var i in this.modes){
-			if(this.modes[i].name === messagedata[2]){
-				console.log()
-				this.modes[i].receive(messagedata[0], messagedata[1]);
-			}
-		}
-	},
-	//websocketにデータを送信
-	sendToAll: function(mode_name, message){
-		console.log('send to all from FW');
-		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	}
 
 };
-
-
-
-
-
-///////////////////
-// モード追加ボタンの処理
-
-//用語解説モードが追加されたら
-$('#add_mode_dictionary').click(function() {
-	console.log("adding Dictionary");
-	//共通のhtmlタグを追加
-	var conf = {streamInterval: null};
-	FW.addMode(mode_dictionary, conf);
-});
-
-$('#add_mode_stt').click(function() {
-	console.log("adding STT");
-	//共通のhtmlタグを追加
-	var conf = {streamInterval: null};
-	FW.addMode(mode_stt, conf);
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

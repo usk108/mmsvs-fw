@@ -11,12 +11,12 @@ Chat.connect = (function(host) {
     } else if ('MozWebSocket' in window) {
         Chat.socket = new MozWebSocket(host);
     } else {
-        console.log('Error: WebSocket is not supported by this browser.,,');
+        console.log('Error: WebSocket is not supported by this browser.,,system_message');
         return;
     }
 
     Chat.socket.onopen = function () {
-        console.log("Info: WebSocket connection opened.,,");
+        console.log("Info: WebSocket connection opened.,,system_message");
         // document.getElementById('chat').onkeydown = function(event) {
         //     if (event.keyCode == 13) {
         //         Chat.sendMessage();
@@ -33,17 +33,18 @@ Chat.connect = (function(host) {
         console.log(message.data);
         var data = message.data.split(",");
         if(data[2] === "usercheck"){
+            FW.userID = data[1];
             userName = data[1];
             console.log("i am ",userName);
-        }else if(data[0] === "reqconnect"){
-            //deaf側からビデオチャットのために必要なidが送られてきた時
-            //messagedata[0]にidが入っている
-            //ただしtextに手動でユーザ名にreqconnectと入力されると誤動作が起きる
-            var call = peer.call(messagedata[1], myStream);
+        }else if(data[2] === "system_message"){
+            //システムメッセージをコンソールに吐く
+            console.log(data[0]);
         }else{
             //ここで何らかの判断材料を用いて各モードreceiveに渡す
             //TextLogArea.log(message.data);
-            STTMode.receive(message.data);
+            //STTMode.receive(message.data);
+            console.log('receive in ws.js');
+            FW.receive(message.data);
         }
     };
 });
@@ -67,15 +68,3 @@ Chat.sendMessage = (function() {
 });
 
 Chat.initialize();
-
-
-
-
-
-
-
-
-
-
-
-
