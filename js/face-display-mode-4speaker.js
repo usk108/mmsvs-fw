@@ -3,7 +3,7 @@ var mode_face_display_for_speaker = {
 	// モード名
 	name: 'face_display_for_speaker',
 	// モード名(日本語)
-	nameJapanese: '顔表示モード（見る人用）',
+	nameJapanese: '顔表示モード（話し手用）',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
