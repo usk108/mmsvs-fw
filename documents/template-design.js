@@ -54,6 +54,7 @@ var xModal = {
 ///////////////////
 // FW部分
 var FW = {
+	userID: '',
 	modes: [],
 	subscribers: {
 		stt: []
@@ -65,13 +66,20 @@ var FW = {
 		{mode: stt, date:"2015-10-21 14:40:56:12", data:"こんにちは"}
 	],
 
-	addModal: function(m, config) {
+	addMode: function(m, config) {
+		if($.inArray(m, this.modes) > -1){
+			console.log('this mode has already added.');
+			return;
+		}
+
 		//与えられた設定をモードに追加
 		m.config = config;
 		this.modes.push(m);
 
 		// モードごとのviewの作成
 		m.view = this.createNewFrame(m.name, m.stable_config);
+		m.output_area = $('.main_view', m.view);
+
 
 		// モードごとに初期処理
 		m.init();
@@ -83,24 +91,29 @@ var FW = {
 		});
 		$('.stop', $('#' + m.name)).click(function() {
 			m.stop();
-			m.state = '';
+			m.state = 'waiting';
 		});
 
 		// streamの設定
-		setInterval(function() {
-			if (m.state == 'running') {
-				m.stream();
-			}
-		}, m.config.streamInterval);
+		if(m.config.streamInterval != null){
+			setInterval(function() {
+				if (m.state == 'running') {
+					m.stream();
+				}
+			}, m.config.streamInterval);
+		}
+
+		console.log(m);
 	},
 
 	//共通部分のview作成
 	createNewFrame: function(name, stable_config) {
 		var mainf = $('<div>')
 		.attr('class', 'main_view')
-		.attr('id', name)
+		.attr('id', 'main_view_' + name)
 		.attr('width', stable_config.view.width)
 		.attr('height', stable_config.view.height);
+		//TODO: width, heightはcssに分離
 
 		var cbar = $('<div>')
 		.append($('<input>').attr('type', 'button').attr('value', 'config'));
@@ -109,9 +122,9 @@ var FW = {
 		if(stable_config.btn.needStop)
 			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
-		var view = $('<div>').attr('id', name).append(cbar).append(mainf);
+		var view = $('<div>').attr('id', name).append(mainf).append(cbar);
 		view.appendTo('#modes-container');
-		return mainf;
+		return view;
 	},
 
 	//subscriberからの呼び出しに応じてpublisherの購読者リストにsubsriberを追加
@@ -132,6 +145,28 @@ var FW = {
 		for (var i in this.subscribers[publisher]){
 			this.subscribers[i].notify(data);
 		}
+	},
+
+	//websocket通信のデータ形式
+	//'モード名 ユーザID データ内容'
+	//モード名の情報はFWが付与する
+
+	//websocketからデータを受け取る
+	receive: function(message){
+		console.log('receive in FW');
+		var messagedata = message.split(',');
+		for(var i in this.modes){
+			if(this.modes[i].name === messagedata[2]){
+				console.log()
+				this.modes[i].receive(messagedata[0], messagedata[1]);
+			}
+		}
+	},
+	//websocketにデータを送信
+	sendToAll: function(mode_name, message){
+		console.log('send to all from FW');
+		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	}
+
 
 };
