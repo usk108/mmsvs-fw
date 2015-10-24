@@ -157,19 +157,12 @@ $('#add_fd4spkr_mode').click(function() {
 	FW.addMode(mode_face_display_for_speaker, conf);
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+$('#add_fd4obsr_mode').click(function() {
+	console.log("adding Face4Obsr");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_face_display_for_observer, conf);
+});
 
 
 

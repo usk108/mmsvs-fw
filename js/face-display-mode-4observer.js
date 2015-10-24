@@ -1,56 +1,90 @@
 // モーダルの定義の仕方
-var FaceDisplayMode4Observer = {
-	output_area : null,
-	control_bar : null,
+var mode_face_display_for_observer = {
+	// モード名
+	name: 'face_display_for_observer',
+	// 割り当てられたhtml
+	view: null,
+	// モード追加時に外部から与えられるモードの設定
+	config: null,
+	// 外部から変更できないモードの設定情報
+	stable_config: {
+		view: {
+			width: 500,		//画面の横幅
+			height: 500		//画面の縦幅
+		},
+		btn: {
+			needRun:true ,	//Runボタンが必要か
+			needStop:true 	//Stopボタンが必要か
+		}
+	},
+	state: 'waiting',
+
+	//
 	room : null,
-	receiving : false,
+	video : null,
+	//canvas : null,
+	context : null,
+	broadcasting : false,
+	myStream : null,
 
-	client : new BinaryClient('ws://' + window.location.host + ':9001'),
-
+	client : null,
 
 	init : function(modeconfig) {
-		//タグを知る
-		this.output_area = modeconfig.output_area;
-		this.control_bar = modeconfig.control_bar;
+		this.room = "demoroom";
+		this.client = new BinaryClient('ws://' + window.location.host + ':9001');
 
+		this.arrangeView();
+		$('#v')[0].autoplay = true;
+		this.video = document.getElementById('v');
+		var canvas = document.getElementById('c');
+		//console.log(canvas);
+		this.context = canvas.getContext('2d');
+
+		this.attachEvents();
 	},
 
 	attachEvents : function() {
 
 		var self = this;
-		client.on('open', function(){
-		  self.stream = self.client.createStream({room: room, type: 'read'});
-		  self.stream.on('data', function(data) {
-			if(self.receiving){
-				console.log('in attachEvents receiving is '+self.receiving);
-				self.receive(data);
-			}
-		  });
+		this.client.on('open', function(){
+			self.myStream = self.client.createStream({room: self.room, type: 'read'});
+			self.myStream.on('data', function(data) {
+				if(self.state == 'running'){
+					console.log('in attachEvents state is '+self.state);
+					self.receiveFromNjs(data);
+				}
+			});
 		});
 	},
 
-	finalize : function() {
+	arrangeView: function(){
+		console.log('xmodal: arrange view');
+		var video = $('<video>')
+		.attr('id', 'v')
+		.attr('width', '320')
+		.attr('height', '240');
 
+		var canvas = $('<canvas>')
+		.attr('id', 'c')
+		.attr('width', '320')
+		.attr('height', '240');
+
+		$('.main_view', this.view).append(video).append(canvas);
 	},
 
 	run : function() {
-		this.receiving = true;
-		console.log('receiving is '+this.receiving);
+		this.state = 'runnning';
+		console.log('state is '+this.state);
 	},
 
 	stop : function() {
-		this.receiving = false;
-		//見るとこも消す？
+		this.state = 'waiting';
 	},
 
-	receive : function(message) {
-	    var t = this.context.getImageData(0,0, 200, 1600);
-	    t.data.set(new Uint8ClampedArray(data));
-	    this.context.putImageData(t, 0, 0);
+	receiveFromNjs : function(data) {
+		var t = this.context.getImageData(0,0, 200, 1600);
+		t.data.set(new Uint8ClampedArray(data));
+		this.context.putImageData(t, 0, 0);
 		console.log('wrote image');
-	},
-
-	sendToAll : function(message) {
 	}
-
 };

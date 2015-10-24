@@ -107,18 +107,11 @@ var mode_face_display_for_speaker = {
 
 	//FWから呼ばれる
 	stream : function() {
-		console.log('streaming');
-		// console.log(this);
 		var self = mode_face_display_for_speaker;
-		console.log('in streaming state is '+ self.state);
 		if(self.state == 'running'){
-			console.log('yeahhhhhhh');
 			self.context.drawImage(self.video, 0, 0, 200, 150);
 			var data = self.context.getImageData(0,0, 200,150).data;
-			// return data;
-			console.log(data);
 			self.myStream.write(data);
-			console.log('wrote stream');
 		}
 	}
 
