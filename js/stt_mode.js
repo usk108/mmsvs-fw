@@ -2,6 +2,8 @@
 var mode_stt = {
 	// モード名
 	name: 'stt',
+	// モード名(日本語)
+	nameJapanese: '音声認識チャットモード',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -10,7 +12,7 @@ var mode_stt = {
 	stable_config: {
 		view: {
 			width: 560,	//画面の横幅
-			height: 600	//画面の縦幅
+			height: 300 	//画面の縦幅
 		},
 		btn: {
 			needRun:true ,	//Runボタンが必要か
@@ -89,7 +91,7 @@ var mode_stt = {
 		var div = $('<div>');
 		var wrapdiv = $('<div>');
 
-		if(userName === userName){
+		if(userName === FW.userID){
 			//吹き出し生成
 			div.attr('class','balloon balloon-2-right');
 			//それを中央寄りにする

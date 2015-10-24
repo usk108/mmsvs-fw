@@ -2,6 +2,8 @@
 var mode_face_display_for_speaker = {
 	// モード名
 	name: 'face_display_for_speaker',
+	// モード名(日本語)
+	nameJapanese: '顔表示モード（見る人用）',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -72,7 +74,8 @@ var mode_face_display_for_speaker = {
 		var canvas = $('<canvas>')
 		.attr('id', 'c')
 		.attr('width', '320')
-		.attr('height', '240');
+		.attr('height', '240')
+		.hide();
 
 		$('.main_view', this.view).append(video).append(canvas);
 	},
@@ -89,21 +92,6 @@ var mode_face_display_for_speaker = {
 
 	receive : function(message) {
 	},
-
-	//sendToAll : function(message) {
-	// sendToAll : function() {
-	//	// console.log('streaming');
-	//	// console.log(this);
-	//	var self = mode_face_display_for_speaker;
-	//	console.log('in streaming state is '+ self.state);
-	//	if(self.state == 'running'){
-	//		self.context.drawImage(self.video, 0, 0, 200, 150);
-	//		var data = self.context.getImageData(0,0, 200,150).data;
-	//		console.log(data);
-	//		self.myStream.write(data);
-	//		console.log('wrote stream');
-	//	}
-	// },
 
 	//FWから呼ばれる
 	stream : function() {

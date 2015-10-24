@@ -18,7 +18,7 @@ var FW = {
 		this.modes.push(m);
 
 		// モードごとのviewの作成
-		m.view = this.createNewFrame(m.name, m.stable_config);
+		m.view = this.createNewFrame(m.name, m.nameJapanese, m.stable_config);
 		m.output_area = $('.main_view', m.view);
 
 
@@ -49,7 +49,9 @@ var FW = {
 	},
 
 	//共通部分のview作成
-	createNewFrame: function(name, stable_config) {
+	createNewFrame: function(name, nameJapanese, stable_config) {
+		var mode_name = $('<h4>').html(nameJapanese);
+
 		var mainf = $('<div>')
 		.attr('class', 'main_view')
 		.attr('id', 'main_view_' + name)
@@ -64,7 +66,8 @@ var FW = {
 		if(stable_config.btn.needStop)
 			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
-		var view = $('<div>').attr('id', name).append(mainf).append(cbar);
+		//TODO: class = col-md-3 は適当なので調整する
+		var view = $('<div>').attr('id', name).attr('class', 'col-md-4 column').append(mode_name).append(mainf).append(cbar);
 		view.appendTo('#modes-container');
 		return view;
 	},

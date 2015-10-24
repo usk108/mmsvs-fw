@@ -2,6 +2,8 @@
 var mode_dictionary = {
 	// モード名
 	name: 'dictionary',
+	// モード名(日本語)
+	nameJapanese: '用語解説モード',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定

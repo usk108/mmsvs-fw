@@ -15,7 +15,7 @@
             border: 1px solid #CCCCCC;
             border-right-color: #999999;
             border-bottom-color: #999999;
-            height: 570px;
+            height: 500px;
             overflow-y: scroll;
             padding: 5px;
             width: 100%;
@@ -38,13 +38,13 @@
         }
 
         .wrap-center{
-            text-align: center;            
+            text-align: center;
         }
         .wrap-right{
-            text-align: right;            
+            text-align: right;
         }
         .wrap-left{
-            text-align: left;            
+            text-align: left;
         }
 
         body {

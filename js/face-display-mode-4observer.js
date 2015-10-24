@@ -2,6 +2,8 @@
 var mode_face_display_for_observer = {
 	// モード名
 	name: 'face_display_for_observer',
+	// モード名(日本語)
+	nameJapanese: '顔表示モード（話し手用）',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -62,7 +64,8 @@ var mode_face_display_for_observer = {
 		var video = $('<video>')
 		.attr('id', 'v')
 		.attr('width', '320')
-		.attr('height', '240');
+		.attr('height', '240')
+		.hide();
 
 		var canvas = $('<canvas>')
 		.attr('id', 'c')
