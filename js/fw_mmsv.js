@@ -37,6 +37,7 @@ var FW = {
 
 		// streamの設定
 		if(m.config.streamInterval != null){
+			console.log('addin set interval function for '+m.name);
 			setInterval(function() {
 				if (m.state == 'running') {
 					m.stream();
@@ -107,6 +108,22 @@ var FW = {
 	sendToAll: function(mode_name, message){
 		console.log('send to all from FW');
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
+	},
+
+	receiveFromN: function(message){
+		console.log('receive in FW');
+		var messagedata = message.split(',');
+		for(var i in this.modes){
+			if(this.modes[i].name === messagedata[2]){
+				console.log()
+				this.modes[i].receive(messagedata[0], messagedata[1]);
+			}
+		}
+	},
+	//websocketにデータを送信
+	stream: function(mode_name, message){
+		console.log('send to all from FW');
+		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	}
 
 };
@@ -133,19 +150,19 @@ $('#add_mode_stt').click(function() {
 	FW.addMode(mode_stt, conf);
 });
 
+$('#add_fd4spkr_mode').click(function() {
+	console.log("adding Face4Spkr");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: 50};
+	FW.addMode(mode_face_display_for_speaker, conf);
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
+$('#add_fd4obsr_mode').click(function() {
+	console.log("adding Face4Obsr");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_face_display_for_observer, conf);
+});
 
 
 

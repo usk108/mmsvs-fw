@@ -1,0 +1,23 @@
+{
+  "author": "Eric Zhang",
+  "name": "ascam",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ericz/ascam.git"
+  },
+  "engines": {
+    "node": "~v0.4.12"
+  },
+  "dependencies": {
+    "express": "2.5.11",
+    "binaryjs": "",
+    "ejs": ""
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "license": "BSD"
+}

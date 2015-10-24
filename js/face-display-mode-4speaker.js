@@ -1,24 +1,41 @@
 // モーダルの定義の仕方
-var FaceDisplayMode4Speaker = {
-	output_area : null,
-	control_bar : null,
+var mode_face_display_for_speaker = {
+	// モード名
+	name: 'face_display_for_speaker',
+	// 割り当てられたhtml
+	view: null,
+	// モード追加時に外部から与えられるモードの設定
+	config: null,
+	// 外部から変更できないモードの設定情報
+	stable_config: {
+		view: {
+			width: 500,		//画面の横幅
+			height: 500		//画面の縦幅
+		},
+		btn: {
+			needRun:true ,	//Runボタンが必要か
+			needStop:true 	//Stopボタンが必要か
+		}
+	},
+	state: 'waiting',
+
+	//
 	room : null,
 	video : null,
 	//canvas : null,
 	context : null,
 	broadcasting : false,
-	stream : null,
+	myStream : null,
 
-	client : new BinaryClient('ws://' + window.location.host + ':9001'),
+	client : null,
 
 
-	init : function(modeconfig) {
-		//タグを知る
-		this.output_area = modeconfig.output_area;
-		this.control_bar = modeconfig.control_bar;
-
+	init : function() {
 		this.room = "demoroom";
+		this.client = new BinaryClient('ws://' + window.location.host + ':9001');
 
+		this.arrangeView();
+		$('#v')[0].autoplay = true;
 		this.video = document.getElementById('v');
 		var canvas = document.getElementById('c');
 		//console.log(canvas);
@@ -29,67 +46,72 @@ var FaceDisplayMode4Speaker = {
 	},
 
 	attachEvents : function() {
+		var self = this;
 		this.client.on('open', function(){
-			this.stream = this.client.createStream({room: room, type: 'write'});
+			console.log('in attaching, client is ' + self.client);
+			self.myStream = self.client.createStream({room: self.room, type: 'write'});
+			console.log('in attaching, myStream is ' + self.myStream);
 		});
 
 		// Not showing vendor prefixes or code that works cross-browser.
-		var self = this;
 		navigator.webkitGetUserMedia({video: true}, function(stream) {
 			self.video.src = window.webkitURL.createObjectURL(stream);
-			console.log('in attachEvents broadcasting is '+self.broadcasting);
-			//if(self.broadcasting){
-			setInterval(self.sendToAll, 50);
-			//}
+			console.log('in attachEvents state is '+ self.state);
+			// setInterval(self.sendToAll, 50);
 		}, function() {alert('fail');});
 
 	},
 
-	finalize : function() {
+	arrangeView: function(){
+		console.log('xmodal: arrange view');
+		var video = $('<video>')
+		.attr('id', 'v')
+		.attr('width', '320')
+		.attr('height', '240');
 
+		var canvas = $('<canvas>')
+		.attr('id', 'c')
+		.attr('width', '320')
+		.attr('height', '240');
+
+		$('.main_view', this.view).append(video).append(canvas);
 	},
 
 	run : function() {
-		console.log('before, broadcasting is '+ this.broadcasting);
-		this.broadcasting = true;
-		console.log('after, broadcasting is '+ this.broadcasting);
+		console.log('before, state is '+ this.state);
+		this.state = 'running';
+		console.log('after, state is '+ this.state);
 	},
 
 	stop : function() {
-		this.broadcasting = false;
+		this.state = 'waiting';
 	},
 
 	receive : function(message) {
 	},
 
 	//sendToAll : function(message) {
-	sendToAll : function() {
-		// console.log('streaming');
-		// console.log(this);
-		 var self = FaceDisplayMode4Speaker;
-		 console.log('in streaming broadcasting is '+ self.broadcasting);
-		if(self.broadcasting){
-			self.context.drawImage(self.video, 0, 0, 200, 150);
-			var data = self.context.getImageData(0,0, 200,150).data;
-		    console.log(data);
-			self.stream.write(data);
-			console.log('wrote stream');
-		}
-	}
+	// sendToAll : function() {
+	//	// console.log('streaming');
+	//	// console.log(this);
+	//	var self = mode_face_display_for_speaker;
+	//	console.log('in streaming state is '+ self.state);
+	//	if(self.state == 'running'){
+	//		self.context.drawImage(self.video, 0, 0, 200, 150);
+	//		var data = self.context.getImageData(0,0, 200,150).data;
+	//		console.log(data);
+	//		self.myStream.write(data);
+	//		console.log('wrote stream');
+	//	}
+	// },
 
 	//FWから呼ばれる
-	stream : f
-	\unction() {
-		// console.log('streaming');
-		// console.log(this);
-		 var self = FaceDisplayMode4Speaker;
-		 console.log('in streaming broadcasting is '+ self.broadcasting);
-		if(self.broadcasting){
+	stream : function() {
+		var self = mode_face_display_for_speaker;
+		if(self.state == 'running'){
 			self.context.drawImage(self.video, 0, 0, 200, 150);
 			var data = self.context.getImageData(0,0, 200,150).data;
-		    console.log(data);
-			stream.write(data);
-			console.log('wrote stream');
+			self.myStream.write(data);
 		}
 	}
 
