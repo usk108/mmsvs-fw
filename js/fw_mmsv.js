@@ -7,8 +7,17 @@ var FW = {
 	// todo: localstorageで管理
 	dataFromModes: [],
 
+	deleteMode: function(m) {
+		if($.inArray(m, this.modes) > -1){
+			m.view.hide();
+			return;
+		}
+		console.log('this mode does not exist.');
+	},
+
 	addMode: function(m, config) {
 		if($.inArray(m, this.modes) > -1){
+			m.view.show();
 			console.log('this mode has already added.');
 			return;
 		}
@@ -165,6 +174,28 @@ $('#add_fd4obsr_mode').click(function() {
 	//共通のhtmlタグを追加
 	var conf = {streamInterval: null};
 	FW.addMode(mode_face_display_for_observer, conf);
+});
+
+
+//用語解説モードが追加されたら
+$('#delete_mode_dictionary').click(function() {
+	console.log("deleting Dictionary");
+	FW.deleteMode(mode_dictionary);
+});
+
+$('#delete_mode_stt').click(function() {
+	console.log("deleting STT");
+	FW.deleteMode(mode_stt);
+});
+
+$('#delete_fd4spkr_mode').click(function() {
+	console.log("deleting Face4Spkr");
+	FW.deleteMode(mode_face_display_for_speaker);
+});
+
+$('#delete_fd4obsr_mode').click(function() {
+	console.log("deleting Face4Obsr");
+	FW.deleteMode(mode_face_display_for_observer);
 });
 
 
