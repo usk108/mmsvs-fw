@@ -53,7 +53,6 @@
 2. 1と同時にその映像をWebSocketサーバを通して聞き手バージョンに送信する状態になります。
 3. 聞き手バージョンでrunボタンを押すことで受け取った映像をアプリ上に表示する状態にします。
 
-![顔表示モード](https://github.com/usk108/mmsvs-fw/wiki/images/face_mode.png)
 
 #### 音声テキスト化モード
 健聴者の発話内容を音声認識処理を通すことで文字情報として可視化します。
@@ -66,6 +65,10 @@
 無償で利用可能な音声認識エンジンとして、 Google の Web Speech API を使用しています。
 
 ![音声テキスト化モード](https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png)
+<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="40">
+<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="200">
+<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="300">
+<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="400">
 
 #### 用語解説モード
 専門用語・固有名詞など口話法での読み取りが困難な単語を指定することで、その意味情報を表示できます。
@@ -85,6 +88,8 @@
 そのために制御の反転をとりいれたアーキテクチャを採用することにより開発の容易化をしたり、
 Pub/Subメッセージングモデルを使った可視化モードの組み合わせによるより高機能な機能の開発を可能にしています。
 
+![クラス図](https://github.com/usk108/mmsvs-fw/wiki/images/classes.png)
+
 ### クライアント間通信をWebSocketに統一
 顔映像をクライアント間でやりとりする際、当初はWebRTCを用いていました。
 一方でテキストデータなどその他の情報はWebSocket通信で行われていました。
@@ -92,6 +97,8 @@ Pub/Subメッセージングモデルを使った可視化モードの組み合�
 今後の開発の容易化を考えて設計をシンプルにしたいということを考慮し、
 WebSocket通信に一本化しました。
 画像1つ1つをバイナリーに変換し送信するという方法で実現しました。
+
+![WebSocket通信流れ](https://github.com/usk108/mmsvs-fw/wiki/images/ws_flow.png)
 
 
 ## 使用技術
