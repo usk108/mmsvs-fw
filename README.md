@@ -64,11 +64,7 @@
 
 無償で利用可能な音声認識エンジンとして、 Google の Web Speech API を使用しています。
 
-![音声テキスト化モード](https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png)
-<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="40">
-<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="200">
-<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="300">
-<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="400">
+<img src="https://github.com/usk108/mmsvs-fw/wiki/images/textize_mode.png" width="500">
 
 #### 用語解説モード
 専門用語・固有名詞など口話法での読み取りが困難な単語を指定することで、その意味情報を表示できます。
@@ -79,8 +75,7 @@
 
 無償で利用可能な用語検索ツールとして、フリー百科事典である Wikipedia からの用語検索が可能な MediaWikiAPIを使用している。
 
-
-![用語解説モード](https://github.com/usk108/mmsvs-fw/wiki/images/dictionary_mode.png)
+<img src="https://github.com/usk108/mmsvs-fw/wiki/images/dictionary_mode.png" width="600">
 
 ## 工夫した点
 ### 可視化モードがプラグインのように拡張可能な設計
