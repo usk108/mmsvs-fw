@@ -163,6 +163,13 @@ $('#add_mode_stt').click(function() {
 	FW.addMode(mode_stt, conf);
 });
 
+$('#add_mode_stt_cloud').click(function() {
+	console.log("adding STT_cloud");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_stt_cloud, conf);
+});
+
 $('#add_fd4spkr_mode').click(function() {
 	console.log("adding Face4Spkr");
 	//共通のhtmlタグを追加
@@ -187,6 +194,11 @@ $('#delete_mode_dictionary').click(function() {
 $('#delete_mode_stt').click(function() {
 	console.log("deleting STT");
 	FW.deleteMode(mode_stt);
+});
+
+$('#delete_mode_stt_cloud').click(function() {
+	console.log("deleting STT_cloud");
+	FW.deleteMode(mode_stt_cloud);
 });
 
 $('#delete_fd4spkr_mode').click(function() {
