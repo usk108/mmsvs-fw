@@ -88,6 +88,5 @@ var mode_face_display_for_observer = {
 		var t = this.context.getImageData(0,0, 200, 1600);
 		t.data.set(new Uint8ClampedArray(data));
 		this.context.putImageData(t, 0, 0);
-		console.log('wrote image');
 	}
 };

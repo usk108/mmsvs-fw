@@ -170,3 +170,30 @@ var FW = {
 
 
 };
+
+
+
+///////////////////
+// （暫定的実装）
+// ws-nodejs.js
+
+var room;
+var last;
+var ascii;
+
+var client = new BinaryClient('ws://' + window.location.host + ':9001');
+var stream;
+var room = "demoroom";
+
+client.on('open', function(){
+	stream = client.createStream({room: room, type: 'write'});
+});
+
+
+// Not showing vendor prefixes or code that works cross-browser.
+//? ここのstreamはもしかして，上のvar streamと関係ない？
+navigator.webkitGetUserMedia({video: true}, function(astream) {
+	video.src = window.webkitURL.createObjectURL(astream);
+    setInterval(myStreaming, 50);
+
+}, function() {alert('fail');});

@@ -122,6 +122,7 @@ var FW = {
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	},
 
+	//websocket(nodejs上)からデータを受信
 	receiveFromN: function(message){
 		console.log('receive in FW');
 		var messagedata = message.split(',');
@@ -132,7 +133,7 @@ var FW = {
 			}
 		}
 	},
-	//websocketにデータを送信
+	//websocket(nodejs上)にデータを送信
 	stream: function(mode_name, message){
 		console.log('send to all from FW');
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
