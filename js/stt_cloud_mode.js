@@ -1,3 +1,5 @@
+
+
 // モーダルの定義の仕方
 var mode_stt_cloud = {
 	// モード名
@@ -24,61 +26,142 @@ var mode_stt_cloud = {
 	output_area : null,
 	recognition : null,
 	nowRecognition : false,
+	rec: null,
+	// WebSocketオブジェクト
+	webSocket: null,
 
 	init : function(modeconfig) {
-		if (!('webkitSpeechRecognition' in window))
-		    TextLogArea.log("Sorry. Web Speech API is not supported by this browser.(STT)");
-		if (!('speechSynthesis' in window))
-		    TextLogArea.log("Sorry. Web Speech API is not supported by this browser.(TTS)");
+		var self = this;
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+		window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
 
-		this.recognition = new webkitSpeechRecognition();
-		this.recognition.lang = "ja-JP";
+		function callback(stream) {
+			console.log("in callback of stt_cloud");
+			var context = new webkitAudioContext();
+			console.log(context.sampleRate);
+			context.sampleRate = 16000;
+			var mediaStreamSource = context.createMediaStreamSource(stream);
+			console.log(mediaStreamSource);
+			// rec_config = {
+			// 	sampleRate: 16000
+			// }
+			self.rec = new Recorder(mediaStreamSource);
+		}
 
-		// 継続的に処理を行い、不確かな情報も取得可能とする.
-		this.recognition.continuous = true;
-		this.recognition.interimResults = true;
 
-		//初期値falseだけど念のため明示的にfalseにする
-		this.nowRecognition = false;
+		console.log("in initialization of stt_cloud");
+		// ブラウザにより異なるAPIをそれぞれ統一
 
-		this.attachEvents();
-		this.arrangeView();
+		navigator.getUserMedia({audio:true}, callback, function(){});
+
+
+		// 接続先URI
+		var uri = '';
+		if (window.location.protocol == 'http:') {
+			uri = 'ws://192.168.0.120:8080/CloudSpeechService/cloudspeech';
+		} else {
+			uri = 'wss://192.168.0.120:8443/CloudSpeechService/cloudspeech';
+		}
+
+		// WebSocket の初期化
+		this.webSocket = new WebSocket(uri);
+		// イベントハンドラの設定
+		this.webSocket.onopen = onOpen;
+		this.webSocket.onmessage = onMessage;
+		this.webSocket.onclose = onClose;
+		this.webSocket.onerror = onError;
+
+		// 接続イベント
+		function onOpen(event) {
+			console.log("接続しました。");
+		}
+
+		// メッセージ受信イベント
+		function onMessage(event) {
+			if (event && event.data) {
+				console.log(event.data);
+			}
+		}
+
+		// エラーイベント
+		function onError(event) {
+			//console.log("エラーが発生しました。");
+		}
+
+		// 切断イベント
+		function onClose(event) {
+			console.log("切断しました。3秒後に再接続します。(" + event.code + ")");
+			this.webSocket = null;
+			setTimeout("open()", 3000);
+		}
 
 		console.log('initialized');
 	},
 	attachEvents : function() {
-		var self = this;
-		//これはなんのため？
-		this.recognition.onaudioend = function() {
-		    self.recognition.stop();
-		    //setButtonForPlay()
-		};
-
-		this.recognition.onresult = function(event) {
-            console.log('result is ...');
-		    var results = event.results;
-		    for (var i = event.resultIndex; i < results.length; i++) {
-		        if (results[i].isFinal) {
-		            var message = results[i][0].transcript;
-		            if (message != '') {
-		                //Chat.socket.send(message);
-		                self.sendToAll(message);
-		            }
-		        }
-		    }
-		};
-		console.log('attached');
+		// var self = this;
+		// //これはなんのため？
+		// this.recognition.onaudioend = function() {
+		//     self.recognition.stop();
+		//     //setButtonForPlay()
+		// };
+        //
+		// this.recognition.onresult = function(event) {
+         //    console.log('result is ...');
+		//     var results = event.results;
+		//     for (var i = event.resultIndex; i < results.length; i++) {
+		//         if (results[i].isFinal) {
+		//             var message = results[i][0].transcript;
+		//             if (message != '') {
+		//                 //Chat.socket.send(message);
+		//                 self.sendToAll(message);
+		//             }
+		//         }
+		//     }
+		// };
+		// console.log('attached');
 	},
 
 	run : function() {
-		console.log('start recognition');
-	    this.recognition.start();
-	    this.nowRecognition = true;
+		var self = this;
+
+		this.rec.record();
+		this.sendToAll("start");
+		console.log("start!!");
+
+		// export a wav every second, so we can send it using websockets
+		intervalKey = setInterval(function() {
+			self.rec.exportWAV(function(blob) {
+				// self.rec.clear();
+				console.log(blob);
+				self.sendToAll(blob);
+				self.rec.clear();
+			});
+		}, 100);
 	},
 
 	stop : function() {
-	    this.recognition.stop();
-	    this.nowRecognition = false;
+		// first send the stop command
+		var self = this;
+		this.rec.exportWAV(function(blob) {
+			// Recorder.forceDownload(blob);
+			// exportWAVのヘッダー部分をコメントアウトすればよいっぽい？
+			// Recorder.forceDownload(blob,"output.raw");
+			console.log(blob);
+			// self.sendToAll(blob);
+			self.rec.clear();
+		});
+
+		this.rec.stop();
+		this.sendToAll("stop");
+
+		// this.webSocket = null;
+
+		clearInterval(intervalKey);
+		// this.sendToAll("analyze");
+		// $("#message").text("");
+
+	    // this.recognition.stop();
+	    // this.nowRecognition = false;
 	},
 
 	receive : function(message, userName) {
@@ -112,7 +195,8 @@ var mode_stt_cloud = {
 	sendToAll : function(message) {
 		//todo:
 		console.log('sent to all from stt mode');
-		FW.sendToAll(this.name, message);
+		this.webSocket.send(message);
+		// FW.sendObjectToAll(this.name, message);
 		//Chat.socket.send(message);
 		console.log('sending' + message);
 	},

@@ -122,6 +122,21 @@ var FW = {
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	},
 
+	//tmp実装：websocketにデータをオブジェクトの形式で送信
+	sendObjectToAll: function(mode_name, message){
+		console.log('send to all from FW');
+		console.log(message);
+		var data = {
+			mode: mode_name,
+			userId: this.userID,
+			message: null,
+			data: message
+		};
+		console.log(data);
+		console.log(JSON.stringify(data));
+		Chat.socket.send(message);
+	},
+
 	//websocket(nodejs上)からデータを受信
 	receiveFromN: function(message){
 		console.log('receive in FW');
