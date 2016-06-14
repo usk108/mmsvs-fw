@@ -30,6 +30,10 @@ var mode_stt_cloud = {
 	// WebSocketオブジェクト
 	webSocket: null,
 
+	//デバッグ用
+	current: 0,
+	previous: 0,
+
 	init : function(modeconfig) {
 		var self = this;
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -37,9 +41,8 @@ var mode_stt_cloud = {
 
 		function callback(stream) {
 			console.log("in callback of stt_cloud");
-			var context = new webkitAudioContext();
+			var context = new window.AudioContext();
 			console.log(context.sampleRate);
-			context.sampleRate = 16000;
 			var mediaStreamSource = context.createMediaStreamSource(stream);
 			console.log(mediaStreamSource);
 			// rec_config = {
@@ -80,6 +83,50 @@ var mode_stt_cloud = {
 		function onMessage(event) {
 			if (event && event.data) {
 				console.log(event.data);
+				var data = JSON.parse(event.data);
+
+				//TODO: ユーザー情報をMMSVSに一元化
+				if(data.type == "usercheck"){
+					console.log("user check now...");
+					console.log(FW.userId);
+					FW.userID = data.userName;
+					console.log(FW.userId);
+					return;
+				}
+
+				// console.log('message: ' + message + ' userName: ' + userName);
+				console.log('body: ' + data.body + ' userName: ' + data.userName);
+
+				if(document.getElementById(data.body.recognitionId) != null){
+					$('#'+data.body.recognitionId).html(data.body.text);
+					return;
+				}
+
+				var textLog = $('#console');
+				var p = $('<p>').attr('style','word-wrap: break-word;').attr('id', data.body.recognitionId).html(data.body.text);
+				var div = $('<div>');
+				var wrapdiv = $('<div>');
+
+				console.log("userName is " + data.userName);
+				console.log("FW.userID is " + FW.userID);
+
+				if(data.userName === FW.userID){
+					//吹き出し生成
+					div.attr('class','balloon balloon-2-right');
+					//それを中央寄りにする
+					wrapdiv.attr('class','wrap-right');
+				}else{
+					div.attr('class','balloon balloon-1-left');
+					wrapdiv.attr('class','wrap-left');
+				}
+				div.append(p);
+				wrapdiv.append(div);
+				textLog.append(wrapdiv);
+
+				while (textLog.children().length > 25) {
+					textLog.children().first().remove();
+				}
+				textLog.scroll(textLog.prop('scrollHeight'));
 			}
 		}
 
@@ -94,6 +141,8 @@ var mode_stt_cloud = {
 			this.webSocket = null;
 			setTimeout("open()", 3000);
 		}
+
+		this.arrangeView();
 
 		console.log('initialized');
 	},
@@ -130,6 +179,10 @@ var mode_stt_cloud = {
 
 		// export a wav every second, so we can send it using websockets
 		intervalKey = setInterval(function() {
+			self.current = new Date().getTime();
+			console.log(self.current + " msec has passed.");
+			console.log((self.current - self.previous) + " msec has passed.");
+			self.previous = self.current;
 			self.rec.exportWAV(function(blob) {
 				// self.rec.clear();
 				console.log(blob);
