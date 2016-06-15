@@ -61,9 +61,9 @@ var mode_stt_cloud = {
 		// 接続先URI
 		var uri = '';
 		if (window.location.protocol == 'http:') {
-			uri = 'ws://192.168.0.120:8080/CloudSpeechService/cloudspeech';
+			uri = 'ws://192.168.0.120:8080/MMSVS/cloudspeech';
 		} else {
-			uri = 'wss://192.168.0.120:8443/CloudSpeechService/cloudspeech';
+			uri = 'wss://192.168.0.120:8443/MMSVS/cloudspeech';
 		}
 
 		// WebSocket の初期化

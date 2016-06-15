@@ -52,10 +52,10 @@ Chat.connect = (function(host) {
 Chat.initialize = function() {
     if (window.location.protocol == 'http:') {
         //Chat.connect('ws://' + window.location.host + '/examples/websocket/tc7/chat');
-        Chat.connect('ws://192.168.0.120:8080/MMSVService/websocket');
+        Chat.connect('ws://192.168.0.120:8080/MMSVS/websocket');
     } else {
         //Chat.connect('wss://' + window.location.host + '/examples/websocket/tc7/chat');
-        Chat.connect('wss://192.168.0.120:8443/MMSVService/websocket');
+        Chat.connect('wss://192.168.0.120:8443/MMSVS/websocket');
     }
 };
 
