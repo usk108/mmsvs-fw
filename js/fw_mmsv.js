@@ -229,3 +229,44 @@ $('#delete_fd4obsr_mode').click(function() {
 
 
 
+///////////////////
+// 簡易ユーザー認証
+$('#add_camera_for_auth').click(function() {
+	console.log("adding camera");
+	var video = $('<video>')
+		.attr('id', 'v_auth')
+		.attr('width', '320')
+		.attr('height', '240');
+
+	var canvas = $('<canvas>')
+		.attr('id', 'c_auth')
+		.attr('width', '320')
+		.attr('height', '240')
+		.hide();
+
+	$('#camera-for-auth').append(video).append(canvas);
+	$('#v_auth')[0].autoplay = true;
+
+	var video = document.getElementById('v_auth');
+
+	// Not showing vendor prefixes or code that works cross-browser.
+	navigator.webkitGetUserMedia({video: true}, function(stream) {
+		video.src = window.webkitURL.createObjectURL(stream);
+	}, function() {alert('fail');});
+
+});
+
+$('#take_a_picture').click(function() {
+	console.log("taking a picture");
+	var canvas = document.getElementById('c_auth');
+	// Draw Image
+	var ctx = canvas.getContext('2d');
+
+	video = document.getElementById('v_auth');
+
+	ctx.drawImage(video, 0, 0, 200, 150);
+	// To Base64
+	var base64_png = canvas.toDataURL("image/png");
+
+	FW.sendObjectToAll("user_register", base64_png);
+});

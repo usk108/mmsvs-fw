@@ -104,23 +104,42 @@ var mode_stt_cloud = {
 
 				var textLog = $('#console');
 				var p = $('<p>').attr('style','word-wrap: break-word;').attr('id', data.body.recognitionId).html(data.body.text);
-				var div = $('<div>');
+				var div_chat = $('<div>');
+				var div_hukidashi = $('<div>');
 				var wrapdiv = $('<div>');
 
 				console.log("userName is " + data.userName);
 				console.log("FW.userID is " + FW.userID);
 
 				if(data.userName === FW.userID){
+					console.log("i'm speaking");
 					//吹き出し生成
-					div.attr('class','balloon balloon-2-right');
+					// div_chat.attr('class','balloon balloon-2-right');
+					div_chat.attr('class','chat-area');
+					div_hukidashi.attr('class','chat-my-hukidashi');
 					//それを中央寄りにする
 					wrapdiv.attr('class','wrap-right');
+					div_hukidashi.append(p);
+					div_chat.append(div_hukidashi);
+					wrapdiv.append(div_chat);
 				}else{
-					div.attr('class','balloon balloon-1-left');
+					console.log("someone is speaking");
+					var div_face = $('<div>').attr('class', 'chat-face');
+					var img_face = $('<img>')
+						.attr('width', '60')
+						.attr('height', '60')
+						.attr('src', './assets/images/tmp/face3.png');
+
+					// div_chat.attr('class','balloon balloon-1-left');
+					div_chat.attr('class','chat-area');
+					div_hukidashi.attr('class','chat-hukidashi someone');
 					wrapdiv.attr('class','wrap-left');
+					div_hukidashi.append(p);
+					div_chat.append(div_hukidashi);
+					div_face.append(img_face);
+					wrapdiv.append(div_face).append(div_chat);
 				}
-				div.append(p);
-				wrapdiv.append(div);
+
 				textLog.append(wrapdiv);
 
 				while (textLog.children().length > 25) {
