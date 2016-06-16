@@ -63,7 +63,6 @@ Chat.sendMessage = (function() {
     var message = document.getElementById('chat').value;
     if (message != '') {
         Chat.socket.send(message);
-        document.getElementById('chat').value = '';
     }
 });
 

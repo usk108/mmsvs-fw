@@ -125,10 +125,16 @@ var mode_stt_cloud = {
 				}else{
 					console.log("someone is speaking");
 					var div_face = $('<div>').attr('class', 'chat-face');
+
+					var img_url = './assets/images/tmp/hatena.jpg';
+					if(data.userName in FW.user_img){
+						img_url = FW.user_img[data.userName];
+					}
+
 					var img_face = $('<img>')
 						.attr('width', '60')
 						.attr('height', '60')
-						.attr('src', './assets/images/tmp/face3.png');
+						.attr('src', img_url);
 
 					// div_chat.attr('class','balloon balloon-1-left');
 					div_chat.attr('class','chat-area');
@@ -193,7 +199,21 @@ var mode_stt_cloud = {
 		var self = this;
 
 		this.rec.record();
-		this.sendToAll("start");
+
+		var first_message = {
+			userName: FW.userID,
+			mode: "user_sync",
+			body: ""
+		};
+		this.sendToAll(JSON.stringify(first_message));
+
+		var start_message = {
+			userName: FW.userID,
+			mode: this.name,
+			body: "start"
+		};
+		this.sendToAll(JSON.stringify(start_message));
+
 		console.log("start!!");
 
 		// export a wav every second, so we can send it using websockets
@@ -224,7 +244,14 @@ var mode_stt_cloud = {
 		});
 
 		this.rec.stop();
-		this.sendToAll("stop");
+
+
+		var stop_message = {
+			userName: FW.userID,
+			mode: this.name,
+			body: "stop"
+		};
+		this.sendToAll(JSON.stringify(stop_message));
 
 		// this.webSocket = null;
 

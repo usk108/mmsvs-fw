@@ -6,6 +6,7 @@ var FW = {
 	subscribers: {},
 	// todo: localstorageで管理
 	dataFromModes: [],
+	user_img: {},
 
 	deleteMode: function(m) {
 		if($.inArray(m, this.modes) > -1){
@@ -108,6 +109,28 @@ var FW = {
 	//websocketからデータを受け取る
 	receive: function(message){
 		console.log('receive in FW');
+		console.log(message);
+
+		// TODO: オブジェクトをパースしてmode="user_register"だったらuserのurlを管理する連想配列に格納する
+		var data = JSON.parse(message);
+		console.log(data);
+
+		if(data.mode == "user_register"){
+			// user_img[data.body]
+			var body = JSON.parse(data.body);
+			console.log(body);
+			this.user_img[body.userName] = body.imgURL;
+
+			console.log(this);
+			if(data.userName == this.userID){
+				this.userID = body.userName;
+			}
+			console.log(this);
+
+			return;
+		}
+
+		//TODO: オブジェクトに対応してない時のためにまだ残してる
 		var messagedata = message.split(',');
 		for(var i in this.modes){
 			if(this.modes[i].name === messagedata[2]){
@@ -128,13 +151,12 @@ var FW = {
 		console.log(message);
 		var data = {
 			mode: mode_name,
-			userId: this.userID,
-			message: null,
-			data: message
+			userName: this.userID,
+			body: message
 		};
 		console.log(data);
 		console.log(JSON.stringify(data));
-		Chat.socket.send(message);
+		Chat.socket.send(JSON.stringify(data));
 	},
 
 	//websocket(nodejs上)からデータを受信
@@ -269,4 +291,10 @@ $('#take_a_picture').click(function() {
 	var base64_png = canvas.toDataURL("image/png");
 
 	FW.sendObjectToAll("user_register", base64_png);
+});
+
+$('#submit_user_name').click(function() {
+	console.log("submitting user name");
+	var name = $('#user_name').val();
+	FW.sendObjectToAll("user_register", name);
 });
