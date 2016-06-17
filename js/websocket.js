@@ -31,21 +31,8 @@ Chat.connect = (function(host) {
 
     Chat.socket.onmessage = function (message) {
         console.log(message.data);
-        var data = message.data.split(",");
-        if(data[2] === "usercheck"){
-            FW.userID = data[1];
-            userName = data[1];
-            console.log("i am ",userName);
-        }else if(data[2] === "system_message"){
-            //システムメッセージをコンソールに吐く
-            console.log(data[0]);
-        }else{
-            //ここで何らかの判断材料を用いて各モードreceiveに渡す
-            //TextLogArea.log(message.data);
-            //STTMode.receive(message.data);
-            console.log('receive in ws.js');
-            FW.receive(message.data);
-        }
+        var data = JSON.parse(message.data);
+        FW.receive(data);
     };
 });
 

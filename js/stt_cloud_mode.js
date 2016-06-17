@@ -45,10 +45,14 @@ var mode_stt_cloud = {
 			console.log(context.sampleRate);
 			var mediaStreamSource = context.createMediaStreamSource(stream);
 			console.log(mediaStreamSource);
-			// rec_config = {
-			// 	sampleRate: 16000
-			// }
 			self.rec = new Recorder(mediaStreamSource);
+
+			var first_message = {
+				userName: FW.userID,
+				mode: this.name,
+				body: "user_sync"
+			};
+			this.sendToAll(JSON.stringify(first_message));
 		}
 
 
@@ -94,7 +98,6 @@ var mode_stt_cloud = {
 					return;
 				}
 
-				// console.log('message: ' + message + ' userName: ' + userName);
 				console.log('body: ' + data.body + ' userName: ' + data.userName);
 
 				if(document.getElementById(data.body.recognitionId) != null){
@@ -114,7 +117,6 @@ var mode_stt_cloud = {
 				if(data.userName === FW.userID){
 					console.log("i'm speaking");
 					//吹き出し生成
-					// div_chat.attr('class','balloon balloon-2-right');
 					div_chat.attr('class','chat-area');
 					div_hukidashi.attr('class','chat-my-hukidashi');
 					//それを中央寄りにする
@@ -136,7 +138,6 @@ var mode_stt_cloud = {
 						.attr('height', '60')
 						.attr('src', img_url);
 
-					// div_chat.attr('class','balloon balloon-1-left');
 					div_chat.attr('class','chat-area');
 					div_hukidashi.attr('class','chat-hukidashi someone');
 					wrapdiv.attr('class','wrap-left');
@@ -200,13 +201,6 @@ var mode_stt_cloud = {
 
 		this.rec.record();
 
-		var first_message = {
-			userName: FW.userID,
-			mode: "user_sync",
-			body: ""
-		};
-		this.sendToAll(JSON.stringify(first_message));
-
 		var start_message = {
 			userName: FW.userID,
 			mode: this.name,
@@ -235,11 +229,9 @@ var mode_stt_cloud = {
 		// first send the stop command
 		var self = this;
 		this.rec.exportWAV(function(blob) {
-			// Recorder.forceDownload(blob);
-			// exportWAVのヘッダー部分をコメントアウトすればよいっぽい？
 			// Recorder.forceDownload(blob,"output.raw");
 			console.log(blob);
-			// self.sendToAll(blob);
+			self.sendToAll(blob);
 			self.rec.clear();
 		});
 
@@ -253,16 +245,10 @@ var mode_stt_cloud = {
 		};
 		this.sendToAll(JSON.stringify(stop_message));
 
-		// this.webSocket = null;
-
 		clearInterval(intervalKey);
-		// this.sendToAll("analyze");
-		// $("#message").text("");
-
-	    // this.recognition.stop();
-	    // this.nowRecognition = false;
 	},
 
+	//stt cloud modeは音声認識とweb socketでのbloadcastを同時にやってるので，このメソッドは使わない
 	receive : function(message, userName) {
 		console.log('receive in stt');
 		console.log('message: ' + message + ' userName: ' + userName);
@@ -291,6 +277,8 @@ var mode_stt_cloud = {
 		}
 		textLog.scroll(textLog.prop('scrollHeight'));
 	},
+
+	//stt cloud modeは音声認識とweb socketでのbloadcastを同時にやってるので，このメソッドは使わない
 	sendToAll : function(message) {
 		//todo:
 		console.log('sent to all from stt mode');
@@ -299,6 +287,7 @@ var mode_stt_cloud = {
 		//Chat.socket.send(message);
 		console.log('sending' + message);
 	},
+
 	arrangeView: function(){
 		console.log('xmodal: arrange view');
 		var text_console = $('<div>')

@@ -103,20 +103,22 @@ var FW = {
 	},
 
 	//websocket通信のデータ形式
-	//'モード名 ユーザID データ内容'
+	//{mode:モード名, userName:ユーザID, body:データ内容}
 	//モード名の情報はFWが付与する
 
 	//websocketからデータを受け取る
-	receive: function(message){
+	receive: function(data){
 		console.log('receive in FW');
-		console.log(message);
-
-		// TODO: オブジェクトをパースしてmode="user_register"だったらuserのurlを管理する連想配列に格納する
-		var data = JSON.parse(message);
 		console.log(data);
 
+		// TODO: オブジェクトをパースしてmode="user_register"だったらuserのurlを管理する連想配列に格納する
+
+		if(data.body == "usercheck"){
+			this.userID = data.userName;
+			return;
+		}
+
 		if(data.mode == "user_register"){
-			// user_img[data.body]
 			var body = JSON.parse(data.body);
 			console.log(body);
 			this.user_img[body.userName] = body.imgURL;
@@ -128,15 +130,6 @@ var FW = {
 			console.log(this);
 
 			return;
-		}
-
-		//TODO: オブジェクトに対応してない時のためにまだ残してる
-		var messagedata = message.split(',');
-		for(var i in this.modes){
-			if(this.modes[i].name === messagedata[2]){
-				console.log()
-				this.modes[i].receive(messagedata[0], messagedata[1]);
-			}
 		}
 	},
 	//websocketにデータを送信
