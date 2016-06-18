@@ -6,9 +6,19 @@ var FW = {
 	subscribers: {},
 	// todo: localstorageで管理
 	dataFromModes: [],
+	user_img: {},
+
+	deleteMode: function(m) {
+		if($.inArray(m, this.modes) > -1){
+			m.view.hide();
+			return;
+		}
+		console.log('this mode does not exist.');
+	},
 
 	addMode: function(m, config) {
 		if($.inArray(m, this.modes) > -1){
+			m.view.show();
 			console.log('this mode has already added.');
 			return;
 		}
@@ -93,18 +103,33 @@ var FW = {
 	},
 
 	//websocket通信のデータ形式
-	//'モード名 ユーザID データ内容'
+	//{mode:モード名, userName:ユーザID, body:データ内容}
 	//モード名の情報はFWが付与する
 
 	//websocketからデータを受け取る
-	receive: function(message){
+	receive: function(data){
 		console.log('receive in FW');
-		var messagedata = message.split(',');
-		for(var i in this.modes){
-			if(this.modes[i].name === messagedata[2]){
-				console.log()
-				this.modes[i].receive(messagedata[0], messagedata[1]);
+		console.log(data);
+
+		// TODO: オブジェクトをパースしてmode="user_register"だったらuserのurlを管理する連想配列に格納する
+
+		if(data.body == "usercheck"){
+			this.userID = data.userName;
+			return;
+		}
+
+		if(data.mode == "user_register"){
+			var body = JSON.parse(data.body);
+			console.log(body);
+			this.user_img[body.userName] = body.imgURL;
+
+			console.log(this);
+			if(data.userName == this.userID){
+				this.userID = body.userName;
 			}
+			console.log(this);
+
+			return;
 		}
 	},
 	//websocketにデータを送信
@@ -113,6 +138,21 @@ var FW = {
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
 	},
 
+	//tmp実装：websocketにデータをオブジェクトの形式で送信
+	sendObjectToAll: function(mode_name, message){
+		console.log('send to all from FW');
+		console.log(message);
+		var data = {
+			mode: mode_name,
+			userName: this.userID,
+			body: message
+		};
+		console.log(data);
+		console.log(JSON.stringify(data));
+		Chat.socket.send(JSON.stringify(data));
+	},
+
+	//websocket(nodejs上)からデータを受信
 	receiveFromN: function(message){
 		console.log('receive in FW');
 		var messagedata = message.split(',');
@@ -123,7 +163,7 @@ var FW = {
 			}
 		}
 	},
-	//websocketにデータを送信
+	//websocket(nodejs上)にデータを送信
 	stream: function(mode_name, message){
 		console.log('send to all from FW');
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
@@ -153,6 +193,13 @@ $('#add_mode_stt').click(function() {
 	FW.addMode(mode_stt, conf);
 });
 
+$('#add_mode_stt_cloud').click(function() {
+	console.log("adding STT_cloud");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_stt_cloud, conf);
+});
+
 $('#add_fd4spkr_mode').click(function() {
 	console.log("adding Face4Spkr");
 	//共通のhtmlタグを追加
@@ -168,5 +215,79 @@ $('#add_fd4obsr_mode').click(function() {
 });
 
 
+//用語解説モードが追加されたら
+$('#delete_mode_dictionary').click(function() {
+	console.log("deleting Dictionary");
+	FW.deleteMode(mode_dictionary);
+});
+
+$('#delete_mode_stt').click(function() {
+	console.log("deleting STT");
+	FW.deleteMode(mode_stt);
+});
+
+$('#delete_mode_stt_cloud').click(function() {
+	console.log("deleting STT_cloud");
+	FW.deleteMode(mode_stt_cloud);
+});
+
+$('#delete_fd4spkr_mode').click(function() {
+	console.log("deleting Face4Spkr");
+	FW.deleteMode(mode_face_display_for_speaker);
+});
+
+$('#delete_fd4obsr_mode').click(function() {
+	console.log("deleting Face4Obsr");
+	FW.deleteMode(mode_face_display_for_observer);
+});
 
 
+
+
+///////////////////
+// 簡易ユーザー認証
+$('#add_camera_for_auth').click(function() {
+	console.log("adding camera");
+	var video = $('<video>')
+		.attr('id', 'v_auth')
+		.attr('width', '320')
+		.attr('height', '240');
+
+	var canvas = $('<canvas>')
+		.attr('id', 'c_auth')
+		.attr('width', '320')
+		.attr('height', '240')
+		.hide();
+
+	$('#camera-for-auth').append(video).append(canvas);
+	$('#v_auth')[0].autoplay = true;
+
+	var video = document.getElementById('v_auth');
+
+	// Not showing vendor prefixes or code that works cross-browser.
+	navigator.webkitGetUserMedia({video: true}, function(stream) {
+		video.src = window.webkitURL.createObjectURL(stream);
+	}, function() {alert('fail');});
+
+});
+
+$('#take_a_picture').click(function() {
+	console.log("taking a picture");
+	var canvas = document.getElementById('c_auth');
+	// Draw Image
+	var ctx = canvas.getContext('2d');
+
+	video = document.getElementById('v_auth');
+
+	ctx.drawImage(video, 0, 0, 200, 150);
+	// To Base64
+	var base64_png = canvas.toDataURL("image/png");
+
+	FW.sendObjectToAll("user_register", base64_png);
+});
+
+$('#submit_user_name').click(function() {
+	console.log("submitting user name");
+	var name = $('#user_name').val();
+	FW.sendObjectToAll("user_register", name);
+});

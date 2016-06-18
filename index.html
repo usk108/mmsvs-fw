@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
     <link rel="stylesheet" href="css/buttons.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
 </head>
 
 <body>
@@ -27,7 +28,37 @@
         </div>
         <div class="row clearfix">
             <div class="col-md-3 column">
-                <!-- Video Handler WebRTC -->
+                <div>
+                    <h3>モード一覧</h3>
+                    <ul>
+                        <li>
+                            用語解説モード</br>
+                            <button type="button" id="add_mode_dictionary" class="btn btn-primary">追加</button>
+                            <button type="button" id="delete_mode_dictionary" class="btn btn-danger">削除</button>
+                        </li>
+                        <li>
+                            音声認識チャットモード</br>
+                            <button type="button" id="add_mode_stt" class="btn btn-primary">追加</button>
+                            <button type="button" id="delete_mode_stt" class="btn btn-danger">削除</button>
+                        </li>
+                        <li>
+                            Cloud Speech APIのテスト用モード</br>
+                            <button type="button" id="add_mode_stt_cloud" class="btn btn-primary">追加</button>
+                            <button type="button" id="delete_mode_stt_cloud" class="btn btn-danger">削除</button>
+                        </li>
+                        <li>
+                            顔表示モード（見る人用）</br>
+                            <button type="button" id="add_fd4obsr_mode" class="btn btn-primary">追加</button>
+                            <button type="button" id="delete_fd4obsr_mode" class="btn btn-danger">削除</button>
+                        </li>
+                        <li>
+                            顔表示モード（話し手用）</br>
+                            <button type="button" id="add_fd4spkr_mode" class="btn btn-primary">追加</button>
+                            <button type="button" id="delete_fd4spkr_mode" class="btn btn-danger">削除</button>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
                 <div>
                     <h4>サンプル文字列</h4>
                     <ul>
@@ -37,25 +68,15 @@
                     </ul>
                 </div>
                 <div>
-                    <h3>追加可能モード</h3>
-                    <ul>
-                        <li>
-                            用語解説モード</br>
-                            <button type="button" id="add_mode_dictionary" class="btn btn-primary">追加</button>
-                        </li>
-                        <li>
-                            音声認識チャットモード</br>
-                            <button type="button" id="add_mode_stt" class="btn btn-primary">追加</button>
-                        </li>
-                        <li>
-                            顔表示モード（見る人用）</br>
-                            <button type="button" id="add_fd4obsr_mode" class="btn btn-primary">追加</button>
-                        </li>
-                        <li>
-                            顔表示モード（話し手用）</br>
-                            <button type="button" id="add_fd4spkr_mode" class="btn btn-primary">追加</button>
-                        </li>
-                    </ul>
+                    <h4>簡易ユーザー認証</h4>
+                    <div>
+                        <label>名前：<input type="text" name="user_name" size="40" maxlength="20" id="user_name"></label>
+                        <button type="button" id="submit_user_name">登録</button>
+                    </div>
+                    <button type="button" id="add_camera_for_auth" class="btn btn-primary">カメラ起動</button>
+                    <button type="button" id="take_a_picture" class="btn btn-primary">撮影＋登録</button>
+                    <div id="camera-for-auth">
+                    </div>
                 </div>
             </div>
             <div class="col-md-9 column">
@@ -68,10 +89,12 @@
 
 
     <script src="js/jquery.min.js"></script>
+    <script src="js/src/recorder.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/buttons.js"></script>
     <script src="js/dictionary_mode.js"></script>
     <script src="js/stt_mode.js"></script>
+    <script src="js/stt_cloud_mode.js"></script>
     <script src="js/binary.js"></script>
     <script src="js/face-display-mode-4observer.js"></script>
     <script src="js/face-display-mode-4speaker.js"></script>
