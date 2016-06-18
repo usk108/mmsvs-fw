@@ -186,6 +186,13 @@ $('#add_mode_dictionary').click(function() {
 	FW.addMode(mode_dictionary, conf);
 });
 
+$('#add_mode_image_search').click(function() {
+	console.log("adding image_search");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_image_search, conf);
+});
+
 $('#add_mode_stt').click(function() {
 	console.log("adding STT");
 	//共通のhtmlタグを追加
@@ -215,10 +222,15 @@ $('#add_fd4obsr_mode').click(function() {
 });
 
 
-//用語解説モードが追加されたら
+//用語解説モードが削除されたら
 $('#delete_mode_dictionary').click(function() {
 	console.log("deleting Dictionary");
 	FW.deleteMode(mode_dictionary);
+});
+
+$('#delete_mode_image_search').click(function() {
+	console.log("deleting image_search");
+	FW.deleteMode(mode_image_search);
 });
 
 $('#delete_mode_stt').click(function() {
