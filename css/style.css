@@ -1,69 +1,107 @@
-        input#chat {
-            width: 410px
-        }
+input#chat {
+    width: 410px
+}
 
-        #console-container {
+/* stt mode */
+#images-list {
+    /*border: 1px solid #CCCCCC;*/
+    /*border-right-color: #999999;*/
+    /*border-bottom-color: #999999;*/
+    height: 250px;
+    /*overflow-x: scroll;*/
+    /*white-space: nowrap;*/
+    /*padding: 5px;*/
+    /*width: 100%;*/
+    overflow-x:auto;
+    overflow-y:hidden;
+    width:100%;
+    white-space:nowrap;
+}
+
+.image {
+    /* 程よい余白のため */
+    /*margin: 0px 5px 0px 0px;*/
+    /*padding: 5px;*/
+    /* 程よいサイズ */
+    /*width: 100px;*/
+    /*height: 100px;*/
+    /* 枠線 */
+    /*border: 1px solid black;*/
+    /* インラインブロックにして改行しないブロックに */
+    /*display: inline-block;*/
+
+    display:inline-block;
+    margin-right:1%;
+    vertical-align:top;
+    white-space:normal;
+}
+
+
+/* stt mode */
+#console-container {
 /*            width: 400px;*/
-            text-align: center;
-        }
+    text-align: center;
+}
 
-        #video-container {
-            height: 650px;
-        }
+#video-container {
+    height: 650px;
+}
 
-        #console {
-            border: 1px solid #CCCCCC;
-            border-right-color: #999999;
-            border-bottom-color: #999999;
-            height: 500px;
-            overflow-y: scroll;
-            padding: 5px;
-            width: 100%;
-        }
+#console {
+    border: 1px solid #CCCCCC;
+    border-right-color: #999999;
+    border-bottom-color: #999999;
+    height: 500px;
+    overflow-y: scroll;
+    padding: 5px;
+    width: 100%;
+}
 
-        #word-explanation-area {
-            width:100%;
-            margin:0 0 10px 0;
-            padding:0;
-            border:1px solid #aaaaaa;
-        }
+#console p {
+    padding: 0;
+    margin: 0;
+}
 
-        #console p {
-            padding: 0;
-            margin: 0;
-        }
 
-        .balloon{
-            margin: 5px auto;
-        }
+.balloon{
+    margin: 5px auto;
+}
 
-        .wrap-center{
-            text-align: center;
-        }
-        .wrap-right{
-            text-align: right;
-        }
-        .wrap-left{
-            text-align: left;
-        }
+.wrap-center{
+    text-align: center;
+}
+.wrap-right{
+    text-align: right;
+}
+.wrap-left{
+    text-align: left;
+}
 
-        body {
-            margin:0;
-            _overflow:hidden;
-            padding:0;
-        }
+/* dictionary mode */
+#word-explanation-area {
+    width:100%;
+    margin:0 0 10px 0;
+    padding:0;
+    border:1px solid #aaaaaa;
+}
 
-        video {
+body {
+    margin:0;
+    _overflow:hidden;
+    padding:0;
+}
+
+video {
 /*            max-width: 100%;
-            height: auto;
+    height: auto;
 */
-            max-height: 300px;
-            width: auto;
-        }
+    max-height: 300px;
+    width: auto;
+}
 
-        .col-md-6 {
-            text-align: center;
-        }
+.col-md-6 {
+    text-align: center;
+}
 
 
 

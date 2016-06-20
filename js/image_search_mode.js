@@ -27,6 +27,7 @@ var mode_image_search = {
 	// 初期処理
 	init : function(modeconfig) {
 		this.attachEvents();
+		this.arrangeView();
 	},
 	// モード独自のイベント処理初期設定
 	attachEvents: function(){
@@ -80,16 +81,21 @@ var mode_image_search = {
 	receive: function(){
 	},
 	arrangeView: function() {
+		var imagesArea = $('<div>')
+			.attr('id', 'images-list');
+		$('.main_view', this.view).append(imagesArea);
 	},
 	//検索結果のリストをもらってそれを表示する
 	showImages: function(images){
+		$('#images-list').empty();
 		for(var i = 0; i < images.length; i++){
 			var img = $('<img>')
-				.attr('width', '200')
 				.attr('height', '200')
+				.attr('class', 'image')
 				.attr('src', images[i].link);
+			// .attr('height', '200')
 			console.log(img);
-			$('.main_view', this.view).append(img);
+			$('#images-list').append(img);
 		}
 	}
 };
