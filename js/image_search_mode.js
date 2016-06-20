@@ -89,12 +89,17 @@ var mode_image_search = {
 	showImages: function(images){
 		$('#images-list').empty();
 		for(var i = 0; i < images.length; i++){
+			var a = $('<a>')
+				.attr('href', images[i].image.contextLink)
+				.attr('target', '_blank');
 			var img = $('<img>')
 				.attr('height', '200')
 				.attr('class', 'image')
+				.attr('alt', images[i].title)
 				.attr('src', images[i].link);
 			console.log(img);
-			$('#images-list').append(img);
+			a.append(img);
+			$('#images-list').append(a);
 		}
 	}
 };

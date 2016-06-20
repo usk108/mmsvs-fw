@@ -16,7 +16,21 @@ input#chat {
     display:inline-block;
     vertical-align:top;
     white-space:normal;
+
+    /*-moz-transition: -moz-transform 0.3s linear;*/
+    /*-webkit-transition: -webkit-transform 0.3s linear;*/
+    /*-o-transition: -o-transform 0.3s linear;*/
+    /*-ms-transition: -ms-transform 0.3s linear;*/
+    /*transition: transform 0.3s linear;*/
 }
+
+/*.image:hover {*/
+    /*-webkit-transform: scale(1.2);*/
+    /*-moz-transform: scale(1.2);*/
+    /*-o-transform: scale(1.2);*/
+    /*-ms-transform: scale(1.2);*/
+    /*transform: scale(1.2);*/
+/*}*/
 
 
 /* stt mode */
