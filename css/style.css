@@ -1,69 +1,103 @@
-        input#chat {
-            width: 410px
-        }
+input#chat {
+    width: 410px
+}
 
-        #console-container {
+/* image search mode */
+#images-list {
+    overflow-x:auto;
+    overflow-y:hidden;
+    width:100%;
+    white-space:nowrap;
+}
+
+.image {
+    border: 5px solid #888;
+    margin: 5px;
+    display:inline-block;
+    vertical-align:top;
+    white-space:normal;
+
+    /*-moz-transition: -moz-transform 0.3s linear;*/
+    /*-webkit-transition: -webkit-transform 0.3s linear;*/
+    /*-o-transition: -o-transform 0.3s linear;*/
+    /*-ms-transition: -ms-transform 0.3s linear;*/
+    /*transition: transform 0.3s linear;*/
+}
+
+/*.image:hover {*/
+    /*-webkit-transform: scale(1.2);*/
+    /*-moz-transform: scale(1.2);*/
+    /*-o-transform: scale(1.2);*/
+    /*-ms-transform: scale(1.2);*/
+    /*transform: scale(1.2);*/
+/*}*/
+
+
+/* stt mode */
+#console-container {
 /*            width: 400px;*/
-            text-align: center;
-        }
+    text-align: center;
+}
 
-        #video-container {
-            height: 650px;
-        }
+#video-container {
+    height: 650px;
+}
 
-        #console {
-            border: 1px solid #CCCCCC;
-            border-right-color: #999999;
-            border-bottom-color: #999999;
-            height: 500px;
-            overflow-y: scroll;
-            padding: 5px;
-            width: 100%;
-        }
+#console {
+    border: 1px solid #CCCCCC;
+    border-right-color: #999999;
+    border-bottom-color: #999999;
+    height: 500px;
+    overflow-y: scroll;
+    padding: 5px;
+    width: 100%;
+}
 
-        #word-explanation-area {
-            width:100%;
-            margin:0 0 10px 0;
-            padding:0;
-            border:1px solid #aaaaaa;
-        }
+#console p {
+    padding: 0;
+    margin: 0;
+}
 
-        #console p {
-            padding: 0;
-            margin: 0;
-        }
 
-        .balloon{
-            margin: 5px auto;
-        }
+.balloon{
+    margin: 5px auto;
+}
 
-        .wrap-center{
-            text-align: center;
-        }
-        .wrap-right{
-            text-align: right;
-        }
-        .wrap-left{
-            text-align: left;
-        }
+.wrap-center{
+    text-align: center;
+}
+.wrap-right{
+    text-align: right;
+}
+.wrap-left{
+    text-align: left;
+}
 
-        body {
-            margin:0;
-            _overflow:hidden;
-            padding:0;
-        }
+/* dictionary mode */
+#word-explanation-area {
+    width:100%;
+    margin:0 0 10px 0;
+    padding:0;
+    border:1px solid #aaaaaa;
+}
 
-        video {
+body {
+    margin:0;
+    _overflow:hidden;
+    padding:0;
+}
+
+video {
 /*            max-width: 100%;
-            height: auto;
+    height: auto;
 */
-            max-height: 300px;
-            width: auto;
-        }
+    max-height: 300px;
+    width: auto;
+}
 
-        .col-md-6 {
-            text-align: center;
-        }
+.col-md-6 {
+    text-align: center;
+}
 
 
 

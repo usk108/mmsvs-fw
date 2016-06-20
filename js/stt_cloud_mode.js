@@ -291,8 +291,8 @@ var mode_stt_cloud = {
 	arrangeView: function(){
 		console.log('xmodal: arrange view');
 		var text_console = $('<div>')
-		.attr('id', 'console-container')
-		.append($('<div>').attr('id', 'console'));
+            .attr('id', 'console-container')
+            .append($('<div>').attr('id', 'console'));
 
 		$('.main_view', this.view).append(text_console);
 	}
