@@ -93,7 +93,6 @@ var mode_image_search = {
 				.attr('height', '200')
 				.attr('class', 'image')
 				.attr('src', images[i].link);
-			// .attr('height', '200')
 			console.log(img);
 			$('#images-list').append(img);
 		}

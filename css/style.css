@@ -2,16 +2,8 @@ input#chat {
     width: 410px
 }
 
-/* stt mode */
+/* image search mode */
 #images-list {
-    /*border: 1px solid #CCCCCC;*/
-    /*border-right-color: #999999;*/
-    /*border-bottom-color: #999999;*/
-    height: 250px;
-    /*overflow-x: scroll;*/
-    /*white-space: nowrap;*/
-    /*padding: 5px;*/
-    /*width: 100%;*/
     overflow-x:auto;
     overflow-y:hidden;
     width:100%;
@@ -19,19 +11,9 @@ input#chat {
 }
 
 .image {
-    /* 程よい余白のため */
-    /*margin: 0px 5px 0px 0px;*/
-    /*padding: 5px;*/
-    /* 程よいサイズ */
-    /*width: 100px;*/
-    /*height: 100px;*/
-    /* 枠線 */
-    /*border: 1px solid black;*/
-    /* インラインブロックにして改行しないブロックに */
-    /*display: inline-block;*/
-
+    border: 5px solid #888;
+    margin: 5px;
     display:inline-block;
-    margin-right:1%;
     vertical-align:top;
     white-space:normal;
 }
