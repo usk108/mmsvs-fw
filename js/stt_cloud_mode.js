@@ -46,15 +46,7 @@ var mode_stt_cloud = {
 			var mediaStreamSource = context.createMediaStreamSource(stream);
 			console.log(mediaStreamSource);
 			self.rec = new Recorder(mediaStreamSource);
-
-			var first_message = {
-				userName: FW.userID,
-				mode: this.name,
-				body: "user_sync"
-			};
-			this.sendToAll(JSON.stringify(first_message));
 		}
-
 
 		console.log("in initialization of stt_cloud");
 		// ブラウザにより異なるAPIをそれぞれ統一
@@ -64,10 +56,12 @@ var mode_stt_cloud = {
 
 		// 接続先URI
 		var uri = '';
+		var ipAddress = "192.168.0.140:";
+		var path = "/MMSVS/cloudspeech";
 		if (window.location.protocol == 'http:') {
-			uri = 'ws://192.168.0.120:8080/MMSVS/cloudspeech';
+			uri = 'ws://' + ipAddress + '8080' + path;
 		} else {
-			uri = 'wss://192.168.0.120:8443/MMSVS/cloudspeech';
+			uri = 'wss://' + ipAddress + '443' + path;
 		}
 
 		// WebSocket の初期化
@@ -81,6 +75,13 @@ var mode_stt_cloud = {
 		// 接続イベント
 		function onOpen(event) {
 			console.log("接続しました。");
+
+			var first_message = {
+				userName: FW.userID,
+				mode: self.name,
+				body: "user_sync"
+			};
+			self.sendToAll(JSON.stringify(first_message));
 		}
 
 		// メッセージ受信イベント
