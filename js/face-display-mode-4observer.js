@@ -68,15 +68,15 @@ var mode_face_display_for_observer = {
 	arrangeView: function(){
 		console.log('xmodal: arrange view');
 		var video = $('<video>')
-		.attr('id', 'v')
-		.attr('width', '320')
-		.attr('height', '240')
-		.hide();
+			.attr('id', 'v')
+			.attr('width', '320')
+			.attr('height', '240')
+			.hide();
 
 		var canvas = $('<canvas>')
-		.attr('id', 'c')
-		.attr('width', '320')
-		.attr('height', '240');
+			.attr('id', 'c')
+			.attr('width', '320')
+			.attr('height', '240');
 
 		$('.main_view', this.view).append(video).append(canvas);
 	},
@@ -90,9 +90,11 @@ var mode_face_display_for_observer = {
 		this.state = 'waiting';
 	},
 
-	receiveFromNjs : function(data) {
+	receiveFromNjs : function(message) {
+		console.log(message);
+
 		var t = this.context.getImageData(0,0, 200, 1600);
-		t.data.set(new Uint8ClampedArray(data));
+		t.data.set(new Uint8ClampedArray(message.body));
 		this.context.putImageData(t, 0, 0);
 	}
 };

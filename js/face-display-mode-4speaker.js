@@ -104,10 +104,12 @@ var mode_face_display_for_speaker = {
 		if(self.state == 'running'){
 			self.context.drawImage(self.video, 0, 0, 200, 150);
 			var data = self.context.getImageData(0,0, 200,150).data;
-			self.myStream.write(data);
+			var message = {
+				userName: FW.userID,
+				mode: this.name,
+				body: data
+			};
+			self.myStream.write(message);
 		}
 	}
-
-
-
 };
