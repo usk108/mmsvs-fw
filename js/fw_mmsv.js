@@ -174,7 +174,7 @@ var FW = {
 
 
 
-$('#show-mode-manage-sidebar').click(function() {
+$('.show-mode-manage-sidebar').click(function() {
 	console.log('show mode manage sidebar');
 	console.log(FW.sidebar_flag);
 	if (FW.sidebar_flag) {
