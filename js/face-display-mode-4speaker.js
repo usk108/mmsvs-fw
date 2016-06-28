@@ -33,7 +33,12 @@ var mode_face_display_for_speaker = {
 
 
 	init : function() {
-		this.room = "demoroom";
+		// this.room = "demoroom";
+
+		var roomNum = Number(FW.userID.match(/\d+/)[0]) % 2;
+		this.room = "room" + roomNum;
+		console.log("this.room is " + this.room);
+
 		var wsaddress = '192.168.0.130:443';
         if (window.location.protocol == 'http:') {
             this.client = new BinaryClient('ws://' + wsaddress);

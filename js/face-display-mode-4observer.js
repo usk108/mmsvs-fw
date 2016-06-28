@@ -29,6 +29,8 @@ var mode_face_display_for_observer = {
 	contexts : {},
 	broadcasting : false,
 	myStream : null,
+	stream0 : null,
+	stream1 : null,
 
 	client : null,
 
@@ -42,12 +44,12 @@ var mode_face_display_for_observer = {
 		}
 
 
-		this.arrangeView();
-		$('#v')[0].autoplay = true;
-		this.video = document.getElementById('v');
-		var canvas = document.getElementById('c');
-		//console.log(canvas);
-		this.context = canvas.getContext('2d');
+		// this.arrangeView();
+		// $('#v')[0].autoplay = true;
+		// this.video = document.getElementById('v');
+		// var canvas = document.getElementById('c');
+		// //console.log(canvas);
+		// this.context = canvas.getContext('2d');
 
 		this.attachEvents();
 	},
@@ -55,11 +57,28 @@ var mode_face_display_for_observer = {
 	attachEvents : function() {
 
 		var self = this;
+		// this.client.on('open', function() {
+		// 	self.myStream = self.client.createStream({room: self.room, type: 'read'});
+		// 	self.myStream.on('data', function (data) {
+		// 		if (self.state == 'running') {
+		// 			console.log('in attachEvents state is ' + self.state);
+		// 			self.receiveFromNjs(data);
+		// 		}
+		// 	});
+		// });
 		this.client.on('open', function(){
-			self.myStream = self.client.createStream({room: self.room, type: 'read'});
-			self.myStream.on('data', function(data) {
+			self.stream0 = self.client.createStream({room: "room0", type: 'read'});
+			self.stream0.on('data', function(data) {
 				if(self.state == 'running'){
-					console.log('in attachEvents state is '+self.state);
+					console.log('in stream0 state is '+self.state);
+					self.receiveFromNjs(data);
+				}
+			});
+
+			self.stream1 = self.client.createStream({room: "room1", type: 'read'});
+			self.stream1.on('data', function(data) {
+				if(self.state == 'running'){
+					console.log('in stream1 state is '+self.state);
 					self.receiveFromNjs(data);
 				}
 			});
@@ -68,18 +87,18 @@ var mode_face_display_for_observer = {
 
 	arrangeView: function(){
 		console.log('xmodal: arrange view');
-		var video = $('<video>')
-			.attr('id', 'v')
-			.attr('width', '320')
-			.attr('height', '240')
-			.hide();
-
-		var canvas = $('<canvas>')
-			.attr('id', 'c')
-			.attr('width', '320')
-			.attr('height', '240');
-
-		$('.main_view', this.view).append(video).append(canvas);
+		// var video = $('<video>')
+		// 	.attr('id', 'v')
+		// 	.attr('width', '320')
+		// 	.attr('height', '240')
+		// 	.hide();
+        //
+		// var canvas = $('<canvas>')
+		// 	.attr('id', 'c')
+		// 	.attr('width', '320')
+		// 	.attr('height', '240');
+        //
+		// $('.main_view', this.view).append(video).append(canvas);
 	},
 
 	run : function() {
@@ -108,6 +127,7 @@ var mode_face_display_for_observer = {
 
 			$('.main_view', this.view).append(video).append(canvas);
 
+			video[0].autoplay = true;
 			this.contexts[message.userName] = canvas[0].getContext('2d');
 		}
 
