@@ -7,6 +7,7 @@ var FW = {
 	// todo: localstorageで管理
 	dataFromModes: [],
 	user_img: {},
+	sidebar_flag: true,
 
 	deleteMode: function(m) {
 		if($.inArray(m, this.modes) > -1){
@@ -63,14 +64,14 @@ var FW = {
 		var mode_name = $('<h4>').html(nameJapanese);
 
 		var mainf = $('<div>')
-		.attr('class', 'main_view')
-		.attr('id', 'main_view_' + name)
-		.attr('width', stable_config.view.width)
-		.attr('height', stable_config.view.height);
+			.attr('class', 'main_view')
+			.attr('id', 'main_view_' + name)
+			.attr('width', stable_config.view.width)
+			.attr('height', stable_config.view.height);
 		//TODO: width, heightはcssに分離
 
 		var cbar = $('<div>')
-		.append($('<input>').attr('type', 'button').attr('value', 'config'));
+			.append($('<input>').attr('type', 'button').attr('value', 'config'));
 		if(stable_config.btn.needRun)
 			cbar.append($('<input>').attr('type', 'button').attr('value', 'run').attr('class', 'run'))
 		if(stable_config.btn.needStop)
@@ -173,6 +174,22 @@ var FW = {
 
 
 
+$('#show-mode-manage-sidebar').click(function() {
+	console.log('show mode manage sidebar');
+	console.log(FW.sidebar_flag);
+	if (FW.sidebar_flag) {
+		$(".wrapper").animate({
+			left: 0
+		});
+	} else {
+		$(".wrapper").animate({
+			left: -300
+		});
+	}
+
+	FW.sidebar_flag = !FW.sidebar_flag;
+})
+
 
 
 ///////////////////
@@ -258,48 +275,48 @@ $('#delete_fd4obsr_mode').click(function() {
 
 ///////////////////
 // 簡易ユーザー認証
-$('#add_camera_for_auth').click(function() {
-	console.log("adding camera");
-	var video = $('<video>')
-		.attr('id', 'v_auth')
-		.attr('width', '320')
-		.attr('height', '240');
-
-	var canvas = $('<canvas>')
-		.attr('id', 'c_auth')
-		.attr('width', '320')
-		.attr('height', '240')
-		.hide();
-
-	$('#camera-for-auth').append(video).append(canvas);
-	$('#v_auth')[0].autoplay = true;
-
-	var video = document.getElementById('v_auth');
-
-	// Not showing vendor prefixes or code that works cross-browser.
-	navigator.webkitGetUserMedia({video: true}, function(stream) {
-		video.src = window.webkitURL.createObjectURL(stream);
-	}, function() {alert('fail');});
-
-});
-
-$('#take_a_picture').click(function() {
-	console.log("taking a picture");
-	var canvas = document.getElementById('c_auth');
-	// Draw Image
-	var ctx = canvas.getContext('2d');
-
-	video = document.getElementById('v_auth');
-
-	ctx.drawImage(video, 0, 0, 200, 150);
-	// To Base64
-	var base64_png = canvas.toDataURL("image/png");
-
-	FW.sendObjectToAll("user_register", base64_png);
-});
-
 $('#submit_user_name').click(function() {
 	console.log("submitting user name");
 	var name = $('#user_name').val();
 	FW.sendObjectToAll("user_register", name);
 });
+
+// $('#add_camera_for_auth').click(function() {
+// 	console.log("adding camera");
+// 	var video = $('<video>')
+// 		.attr('id', 'v_auth')
+// 		.attr('width', '320')
+// 		.attr('height', '240');
+//
+// 	var canvas = $('<canvas>')
+// 		.attr('id', 'c_auth')
+// 		.attr('width', '320')
+// 		.attr('height', '240')
+// 		.hide();
+//
+// 	$('#camera-for-auth').append(video).append(canvas);
+// 	$('#v_auth')[0].autoplay = true;
+//
+// 	var video = document.getElementById('v_auth');
+//
+// 	// Not showing vendor prefixes or code that works cross-browser.
+// 	navigator.webkitGetUserMedia({video: true}, function(stream) {
+// 		video.src = window.webkitURL.createObjectURL(stream);
+// 	}, function() {alert('fail');});
+//
+// });
+//
+// $('#take_a_picture').click(function() {
+// 	console.log("taking a picture");
+// 	var canvas = document.getElementById('c_auth');
+// 	// Draw Image
+// 	var ctx = canvas.getContext('2d');
+//
+// 	video = document.getElementById('v_auth');
+//
+// 	ctx.drawImage(video, 0, 0, 200, 150);
+// 	// To Base64
+// 	var base64_png = canvas.toDataURL("image/png");
+//
+// 	FW.sendObjectToAll("user_register", base64_png);
+// });
