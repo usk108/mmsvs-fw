@@ -34,7 +34,12 @@ var mode_face_display_for_speaker = {
 
 	init : function() {
 		this.room = "demoroom";
-		this.client = new BinaryClient('ws://' + window.location.host + ':9001');
+		var wsaddress = '192.168.0.130:443';
+        if (window.location.protocol == 'http:') {
+            this.client = new BinaryClient('ws://' + wsaddress);
+        } else {
+            this.client = new BinaryClient('wss://' + wsaddress);
+        }
 
 		this.arrangeView();
 		$('#v')[0].autoplay = true;

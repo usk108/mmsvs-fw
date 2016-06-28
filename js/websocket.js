@@ -37,12 +37,14 @@ Chat.connect = (function(host) {
 });
 
 Chat.initialize = function() {
+    var ipAddress = "192.168.0.140:";
+    var path = "/MMSVS/websocket";
     if (window.location.protocol == 'http:') {
         //Chat.connect('ws://' + window.location.host + '/examples/websocket/tc7/chat');
-        Chat.connect('ws://192.168.0.120:8080/MMSVS/websocket');
+        Chat.connect('ws://' + ipAddress + "8080" + path);
     } else {
         //Chat.connect('wss://' + window.location.host + '/examples/websocket/tc7/chat');
-        Chat.connect('wss://192.168.0.120:8443/MMSVS/websocket');
+        Chat.connect('wss://' + ipAddress + "443" + path);
     }
 };
 
