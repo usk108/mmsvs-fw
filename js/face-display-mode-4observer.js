@@ -26,6 +26,7 @@ var mode_face_display_for_observer = {
 	video : null,
 	//canvas : null,
 	context : null,
+	contexts : {},
 	broadcasting : false,
 	myStream : null,
 
@@ -93,8 +94,25 @@ var mode_face_display_for_observer = {
 	receiveFromNjs : function(message) {
 		console.log(message);
 
-		var t = this.context.getImageData(0,0, 200, 1600);
+		if(!(message.userName in this.contexts)){
+			var video = $('<video>')
+				.attr('id', 'v')
+				.attr('width', '320')
+				.attr('height', '240')
+				.hide();
+
+			var canvas = $('<canvas>')
+				.attr('id', 'c')
+				.attr('width', '320')
+				.attr('height', '240');
+
+			$('.main_view', this.view).append(video).append(canvas);
+
+			this.contexts[message.userName] = canvas[0].getContext('2d');
+		}
+
+		var t = this.contexts[message.userName].getImageData(0,0, 200, 1600);
 		t.data.set(new Uint8ClampedArray(message.body));
-		this.context.putImageData(t, 0, 0);
+		this.contexts[message.userName].putImageData(t, 0, 0);
 	}
 };
