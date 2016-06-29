@@ -22,7 +22,48 @@
     width: 300px;
     height: 100%;
     margin-left: -300px;
+    background-color: #eaeaea;
 }
+
+#sidebar-button{
+    position: absolute;
+    top: 10px;
+
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.428571429;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+}
+
+#modes-container > div{
+    padding: 10px;
+    text-align: left;
+}
+
+.main_view_wrapper{
+    /* box-shadow */
+    box-shadow:7px 7px 20px -7px #000000;
+    -moz-box-shadow:7px 7px 20px -7px #000000;
+    -webkit-box-shadow:7px 7px 20px -7px #000000;
+
+    /* border-radius */
+    border-radius:6px;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+
+    /* border */
+    border:1px solid #cccccc;
+
+    padding: 10px;
+}
+
 
 /* chat? */
 
@@ -30,7 +71,12 @@ input#chat {
     width: 410px
 }
 
+
 /* image search mode */
+#main_view_image_search{
+    height: 15vh;
+}
+
 #images-list {
     overflow-x:auto;
     overflow-y:hidden;
@@ -67,21 +113,15 @@ input#chat {
 #console-container {
 /*            width: 400px;*/
     text-align: center;
-    height: 75vh;
+    height: 81vh;
 }
 
 #video-container {
     height: 650px;
 }
 
-.face_display_for_observer-image_search-stt_cloud #console-container {
-    height: 55vh;
-}
-
-.dictionary-face_display_for_observer-stt_cloud #console-container {
-    height: 55vh;
-}
-
+.face_display_for_observer-image_search-stt_cloud #console-container,
+.dictionary-face_display_for_observer-stt_cloud #console-container,
 .dictionary-face_display_for_observer-image_search-stt_cloud #console-container {
     height: 55vh;
 }
@@ -117,6 +157,10 @@ input#chat {
 }
 
 /* dictionary mode */
+#main_view_dictionary{
+    height: 15vh;
+}
+
 #word-explanation-area {
     width:100%;
     margin:0 0 10px 0;
@@ -144,6 +188,16 @@ video {
 #main_view_face_display_for_observer{
     padding: 10px;
 }
+
+#main_view_face_display_for_observer{
+    height: 81vh;
+}
+
+.dictionary-face_display_for_observer-image_search-stt_cloud #main_view_face_display_for_observer {
+    height: 55vh;
+}
+
+
 
 canvas {
     padding: 10px;
