@@ -54,7 +54,7 @@ var mode_dictionary = {
 	    }
 
         console.log("selected word is "+this.target_word);
-        var wikiurl = 'http://ja.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&explaintext&format=json&rawcontinue=continue&titles=' + this.target_word;
+        var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&explaintext&format=json&rawcontinue=continue&titles=' + this.target_word;
         var detail;
         var self = this;
         $.ajax({
