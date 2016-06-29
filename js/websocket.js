@@ -25,7 +25,6 @@ Chat.connect = (function(host) {
     };
 
     Chat.socket.onclose = function () {
-        document.getElementById('chat').onkeydown = null;
         console.log('Info: WebSocket closed.');
     };
 
@@ -47,12 +46,5 @@ Chat.initialize = function() {
         Chat.connect('wss://' + ipAddress + "443" + path);
     }
 };
-
-Chat.sendMessage = (function() {
-    var message = document.getElementById('chat').value;
-    if (message != '') {
-        Chat.socket.send(message);
-    }
-});
 
 Chat.initialize();

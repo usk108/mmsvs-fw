@@ -2,7 +2,8 @@
 // FW部分
 var FW = {
 	userID: '',
-	modes: [],
+	active_modes: [],
+	total_modes: [],
 	subscribers: {},
 	// todo: localstorageで管理
 	dataFromModes: [],
@@ -10,23 +11,31 @@ var FW = {
 	sidebar_flag: true,
 
 	deleteMode: function(m) {
-		if($.inArray(m, this.modes) > -1){
+		if($.inArray(m, this.active_modes) > -1){
 			m.view.hide();
+			this.active_modes.splice(this.active_modes.indexOf(m), 1);
+			FW.updateLayout();
 			return;
 		}
 		console.log('this mode does not exist.');
 	},
 
 	addMode: function(m, config) {
-		if($.inArray(m, this.modes) > -1){
-			m.view.show();
+		if($.inArray(m, this.active_modes) > -1){
 			console.log('this mode has already added.');
+			return;
+		}else if($.inArray(m, this.total_modes) > -1){
+			console.log('this mode has already deleted and added.');
+			this.active_modes.push(m);
+			m.view.show();
+			FW.updateLayout();
 			return;
 		}
 
 		//与えられた設定をモードに追加
 		m.config = config;
-		this.modes.push(m);
+		this.active_modes.push(m);
+		this.total_modes.push(m);
 
 		// モードごとのviewの作成
 		m.view = this.createNewFrame(m.name, m.nameJapanese, m.stable_config);
@@ -57,6 +66,8 @@ var FW = {
 		}
 
 		console.log(m);
+		this.updateLayout();
+
 	},
 
 	//共通部分のview作成
@@ -77,8 +88,11 @@ var FW = {
 		if(stable_config.btn.needStop)
 			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
-		//TODO: class = col-md-3 は適当なので調整する
-		var view = $('<div>').attr('id', name).attr('class', 'col-md-4 column').append(mode_name).append(mainf).append(cbar);
+		var view = $('<div>')
+			.attr('id', name)
+			.append(mode_name)
+			.append(mainf)
+			.append(cbar);
 		view.appendTo('#modes-container');
 		return view;
 	},
@@ -109,8 +123,8 @@ var FW = {
 
 	//websocketからデータを受け取る
 	receive: function(data){
-		console.log('receive in FW');
-		console.log(data);
+		// console.log('receive in FW');
+		// console.log(data);
 
 		// TODO: オブジェクトをパースしてmode="user_register"だったらuserのurlを管理する連想配列に格納する
 
@@ -132,11 +146,22 @@ var FW = {
 
 			return;
 		}
+
+		for(var i in this.active_modes){
+			if(this.active_modes[i].name === data.mode || this.active_modes[i].common_name === data.mode){
+				console.log("receive message for " + this.active_modes[i].name);
+				this.active_modes[i].receive(data);
+			}
+		}
 	},
 	//websocketにデータを送信
-	sendToAll: function(mode_name, message){
+	// sendToAll: function(mode_name, message){
+	// 	console.log('send to all from FW');
+	// 	Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
+	// },
+	sendToAll: function(message){
 		console.log('send to all from FW');
-		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
+		Chat.socket.send(JSON.stringify(message));
 	},
 
 	//tmp実装：websocketにデータをオブジェクトの形式で送信
@@ -148,8 +173,8 @@ var FW = {
 			userName: this.userID,
 			body: message
 		};
-		console.log(data);
-		console.log(JSON.stringify(data));
+		// console.log(data);
+		// console.log(JSON.stringify(data));
 		Chat.socket.send(JSON.stringify(data));
 	},
 
@@ -157,17 +182,109 @@ var FW = {
 	receiveFromN: function(message){
 		console.log('receive in FW');
 		var messagedata = message.split(',');
-		for(var i in this.modes){
-			if(this.modes[i].name === messagedata[2]){
+		for(var i in this.active_modes){
+			if(this.active_modes[i].name === messagedata[2]){
 				console.log()
-				this.modes[i].receive(messagedata[0], messagedata[1]);
+				this.active_modes[i].receive(messagedata[0], messagedata[1]);
 			}
 		}
 	},
 	//websocket(nodejs上)にデータを送信
 	stream: function(mode_name, message){
-		console.log('send to all from FW');
+		// console.log('send to all from FW');
 		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
+	},
+
+
+	//以下サブメソッド
+
+	updateLayout: function(){
+		var mode_names = this.active_modes.map(function(m){ return m.name}).sort().join('-');
+
+		$('#modes-container')
+			.removeAttr('class')
+			.attr('class', mode_names);
+
+		if(mode_names === "face_display_for_observer"){
+			$('#face_display_for_observer').removeAttr('class');
+			$('canvas')
+				.attr('class', 'col-md-4 column');
+			return;
+		}
+
+		if(mode_names === "stt_cloud"){
+			$('#stt_cloud')
+				.attr('class', 'col-md-6 col-md-offset-3 column');
+			return;
+		}
+
+		if(mode_names === "face_display_for_observer-stt_cloud"){
+			$('#face_display_for_observer')
+				.attr('class', 'col-md-7 column');
+			$('canvas')
+				.attr('class', 'col-md-6 column');
+
+			$('#stt_cloud')
+				.attr('class', 'col-md-5 column');
+
+			$("#face_display_for_observer").after($("#stt_cloud"));
+
+			return;
+		}
+
+		if(mode_names === "face_display_for_observer-image_search-stt_cloud"){
+			$('#face_display_for_observer')
+				.attr('class', 'col-md-7 column');
+			$('canvas')
+				.attr('class', 'col-md-6 column');
+
+			$('#stt_cloud')
+				.attr('class', 'col-md-5 column');
+
+			$('#image_search')
+				.attr('class', 'col-md-5 col-md-offset-7');
+
+			$("#face_display_for_observer").after($("#image_search")).after($("#stt_cloud"));
+
+			return;
+		}
+
+		if(mode_names === "dictionary-face_display_for_observer-stt_cloud"){
+			$('#face_display_for_observer')
+				.attr('class', 'col-md-7 column');
+			$('canvas')
+				.attr('class', 'col-md-6 column');
+
+			$('#stt_cloud')
+				.attr('class', 'col-md-5 column');
+
+			$('#dictionary')
+				.attr('class', 'col-md-5 col-md-offset-7');
+
+			$("#face_display_for_observer").after($("#dictionary")).after($("#stt_cloud"));
+
+			return;
+		}
+
+		if(mode_names === "dictionary-face_display_for_observer-image_search-stt_cloud"){
+			$('#face_display_for_observer')
+				.attr('class', 'col-md-7 column');
+			$('canvas')
+				.attr('class', 'col-md-6 column');
+
+			$('#stt_cloud')
+				.attr('class', 'col-md-5 column');
+
+			$('#image_search')
+				.attr('class', 'col-md-6');
+
+			$('#dictionary')
+				.attr('class', 'col-md-6');
+
+			$("#face_display_for_observer").after($("#dictionary")).after($("#image_search")).after($("#stt_cloud"));
+
+			return;
+		}
 	}
 
 };

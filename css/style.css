@@ -45,6 +45,8 @@ input#chat {
     vertical-align:top;
     white-space:normal;
 
+    height: 15vh;
+
     /*-moz-transition: -moz-transform 0.3s linear;*/
     /*-webkit-transition: -webkit-transform 0.3s linear;*/
     /*-o-transition: -o-transform 0.3s linear;*/
@@ -65,17 +67,30 @@ input#chat {
 #console-container {
 /*            width: 400px;*/
     text-align: center;
+    height: 75vh;
 }
 
 #video-container {
     height: 650px;
 }
 
+.face_display_for_observer-image_search-stt_cloud #console-container {
+    height: 55vh;
+}
+
+.dictionary-face_display_for_observer-stt_cloud #console-container {
+    height: 55vh;
+}
+
+.dictionary-face_display_for_observer-image_search-stt_cloud #console-container {
+    height: 55vh;
+}
+
 #console {
     border: 1px solid #CCCCCC;
     border-right-color: #999999;
     border-bottom-color: #999999;
-    height: 500px;
+    height: 100%;
     overflow-y: scroll;
     padding: 5px;
     width: 100%;
@@ -116,9 +131,6 @@ body {
 }
 
 video {
-/*            max-width: 100%;
-    height: auto;
-*/
     max-height: 300px;
     width: auto;
 }
@@ -128,5 +140,12 @@ video {
 }
 
 
+/* face mode mode */
+#main_view_face_display_for_observer{
+    padding: 10px;
+}
 
+canvas {
+    padding: 10px;
+}
 

@@ -31,9 +31,15 @@ var mode_face_display_for_speaker = {
 
 	client : null,
 
+	common_name: 'face_display',
 
 	init : function() {
-		this.room = "demoroom";
+		// this.room = "demoroom";
+
+		var roomNum = Number(FW.userID.match(/\d+/)[0]) % 2;
+		this.room = "room" + roomNum;
+		console.log("this.room is " + this.room);
+
 		var wsaddress = '192.168.0.130:443';
         if (window.location.protocol == 'http:') {
             this.client = new BinaryClient('ws://' + wsaddress);
@@ -56,7 +62,8 @@ var mode_face_display_for_speaker = {
 		var self = this;
 		this.client.on('open', function(){
 			console.log('in attaching, client is ' + self.client);
-			self.myStream = self.client.createStream({room: self.room, type: 'write'});
+			// self.myStream = self.client.createStream({room: self.room, type: 'write'});
+			self.myStream = self.client.createStream({room: 'room_' + FW.userID, type: 'write'});
 			console.log('in attaching, myStream is ' + self.myStream);
 		});
 
@@ -72,15 +79,15 @@ var mode_face_display_for_speaker = {
 	arrangeView: function(){
 		console.log('xmodal: arrange view');
 		var video = $('<video>')
-		.attr('id', 'v')
-		.attr('width', '320')
-		.attr('height', '240');
+			.attr('id', 'v')
+			.attr('width', '320')
+			.attr('height', '240');
 
 		var canvas = $('<canvas>')
-		.attr('id', 'c')
-		.attr('width', '320')
-		.attr('height', '240')
-		.hide();
+			.attr('id', 'c')
+			.attr('width', '320')
+			.attr('height', '240')
+			.hide();
 
 		$('.main_view', this.view).append(video).append(canvas);
 	},
@@ -95,19 +102,38 @@ var mode_face_display_for_speaker = {
 		this.state = 'waiting';
 	},
 
-	receive : function(message) {
-	},
-
 	//FWから呼ばれる
 	stream : function() {
-		var self = mode_face_display_for_speaker;
+		var self = this;
 		if(self.state == 'running'){
-			self.context.drawImage(self.video, 0, 0, 200, 150);
-			var data = self.context.getImageData(0,0, 200,150).data;
-			self.myStream.write(data);
+			self.context.drawImage(self.video, 0, 0, 320, 240);
+			var data = self.context.getImageData(0,0, 320, 240).data;
+			var message = {
+				userName: FW.userID,
+				mode: this.name,
+				body: data
+			};
+			self.myStream.write(message);
 		}
+	},
+
+	receive : function(message) {
+		console.log('receive in stt');
+		console.log(message);
+
+		if(message.body == "look_for_speaker"){
+			var message = {
+				userName: FW.userID,
+				mode: this.common_name,
+				body: "notify_speaker"
+			};
+			this.sendToAll(message);
+		}
+	},
+
+	sendToAll : function(message) {
+		console.log('sent to all from face display mode');
+		console.log(message);
+		FW.sendToAll(message);
 	}
-
-
-
 };
