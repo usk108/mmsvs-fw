@@ -99,6 +99,12 @@ var mode_stt_cloud = {
 					return;
 				}
 
+				if(data.type == "notify"){
+					//必要であればコンソール上にメッセージを表示する
+					console.log(data.body);
+					return;
+				}
+
 				console.log('body: ' + data.body + ' userName: ' + data.userName);
 
 				if(document.getElementById(data.body.recognitionId) != null){
