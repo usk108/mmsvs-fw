@@ -289,6 +289,14 @@ var FW = {
 
 			return;
 		}
+
+		if(mode_names === "script_publish_as_stt-stt_cloud"){
+			$('#stt_cloud')
+				.attr('class', 'col-md-6 column');
+			$('#script_publish_as_stt')
+				.attr('class', 'col-md-6 column');
+			return;
+		}
 	}
 
 };
