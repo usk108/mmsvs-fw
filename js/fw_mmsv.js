@@ -361,6 +361,13 @@ $('#add_fd4obsr_mode').click(function() {
 	FW.addMode(mode_face_display_for_observer, conf);
 });
 
+$('#add_script_mode').click(function() {
+	console.log("adding script");
+	//共通のhtmlタグを追加
+	var conf = {streamInterval: null};
+	FW.addMode(mode_script_publish_as_stt, conf);
+});
+
 
 //用語解説モードが削除されたら
 $('#delete_mode_dictionary').click(function() {
@@ -393,6 +400,10 @@ $('#delete_fd4obsr_mode').click(function() {
 	FW.deleteMode(mode_face_display_for_observer);
 });
 
+$('#delete_script_mode').click(function() {
+	console.log("deleting script");
+	FW.deleteMode(mode_script_publish_as_stt);
+});
 
 
 

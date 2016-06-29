@@ -81,7 +81,7 @@ var mode_stt_cloud = {
 				mode: self.name,
 				body: "user_sync"
 			};
-			self.sendToAll(JSON.stringify(first_message));
+			self.sendToAPI(JSON.stringify(first_message));
 		}
 
 		// メッセージ受信イベント
@@ -106,54 +106,56 @@ var mode_stt_cloud = {
 					return;
 				}
 
-				var textLog = $('#console');
-				var p = $('<p>').attr('style','word-wrap: break-word;').attr('id', data.body.recognitionId).html(data.body.text);
-				var div_chat = $('<div>');
-				var div_hukidashi = $('<div>');
-				var wrapdiv = $('<div>');
-
-				console.log("userName is " + data.userName);
-				console.log("FW.userID is " + FW.userID);
-
-				if(data.userName === FW.userID){
-					console.log("i'm speaking");
-					//吹き出し生成
-					div_chat.attr('class','chat-area');
-					div_hukidashi.attr('class','chat-my-hukidashi');
-					//それを中央寄りにする
-					wrapdiv.attr('class','wrap-right');
-					div_hukidashi.append(p);
-					div_chat.append(div_hukidashi);
-					wrapdiv.append(div_chat);
-				}else{
-					console.log("someone is speaking");
-					var div_face = $('<div>').attr('class', 'chat-face');
-
-					var img_url = './assets/images/tmp/hatena.jpg';
-					if(data.userName in FW.user_img){
-						img_url = FW.user_img[data.userName];
-					}
-
-					var img_face = $('<img>')
-						.attr('width', '60')
-						.attr('height', '60')
-						.attr('src', img_url);
-
-					div_chat.attr('class','chat-area');
-					div_hukidashi.attr('class','chat-hukidashi someone');
-					wrapdiv.attr('class','wrap-left');
-					div_hukidashi.append(p);
-					div_chat.append(div_hukidashi);
-					div_face.append(img_face);
-					wrapdiv.append(div_face).append(div_chat);
-				}
-
-				textLog.append(wrapdiv);
-
-				while (textLog.children().length > 25) {
-					textLog.children().first().remove();
-				}
-				textLog.scroll(textLog.prop('scrollHeight'));
+				self.makeFukidashi(data);
+                //
+				// var textLog = $('#console');
+				// var p = $('<p>').attr('style','word-wrap: break-word;').attr('id', data.body.recognitionId).html(data.body.text);
+				// var div_chat = $('<div>');
+				// var div_hukidashi = $('<div>');
+				// var wrapdiv = $('<div>');
+                //
+				// console.log("userName is " + data.userName);
+				// console.log("FW.userID is " + FW.userID);
+                //
+				// if(data.userName === FW.userID){
+				// 	console.log("i'm speaking");
+				// 	//吹き出し生成
+				// 	div_chat.attr('class','chat-area');
+				// 	div_hukidashi.attr('class','chat-my-hukidashi');
+				// 	//それを中央寄りにする
+				// 	wrapdiv.attr('class','wrap-right');
+				// 	div_hukidashi.append(p);
+				// 	div_chat.append(div_hukidashi);
+				// 	wrapdiv.append(div_chat);
+				// }else{
+				// 	console.log("someone is speaking");
+				// 	var div_face = $('<div>').attr('class', 'chat-face');
+                //
+				// 	var img_url = './assets/images/tmp/hatena.jpg';
+				// 	if(data.userName in FW.user_img){
+				// 		img_url = FW.user_img[data.userName];
+				// 	}
+                //
+				// 	var img_face = $('<img>')
+				// 		.attr('width', '60')
+				// 		.attr('height', '60')
+				// 		.attr('src', img_url);
+                //
+				// 	div_chat.attr('class','chat-area');
+				// 	div_hukidashi.attr('class','chat-hukidashi someone');
+				// 	wrapdiv.attr('class','wrap-left');
+				// 	div_hukidashi.append(p);
+				// 	div_chat.append(div_hukidashi);
+				// 	div_face.append(img_face);
+				// 	wrapdiv.append(div_face).append(div_chat);
+				// }
+                //
+				// textLog.append(wrapdiv);
+                //
+				// while (textLog.children().length > 25) {
+				// 	textLog.children().first().remove();
+				// }
+				// textLog.scroll(textLog.prop('scrollHeight'));
 			}
 		}
 
@@ -189,7 +191,7 @@ var mode_stt_cloud = {
 		//             var message = results[i][0].transcript;
 		//             if (message != '') {
 		//                 //Chat.socket.send(message);
-		//                 self.sendToAll(message);
+		//                 self.sendToAPI(message);
 		//             }
 		//         }
 		//     }
@@ -207,7 +209,7 @@ var mode_stt_cloud = {
 			mode: this.name,
 			body: "start"
 		};
-		this.sendToAll(JSON.stringify(start_message));
+		this.sendToAPI(JSON.stringify(start_message));
 
 		console.log("start!!");
 
@@ -220,7 +222,7 @@ var mode_stt_cloud = {
 			self.rec.exportWAV(function(blob) {
 				// self.rec.clear();
 				console.log(blob);
-				self.sendToAll(blob);
+				self.sendToAPI(blob);
 				self.rec.clear();
 			});
 		}, 100);
@@ -232,7 +234,7 @@ var mode_stt_cloud = {
 		this.rec.exportWAV(function(blob) {
 			// Recorder.forceDownload(blob,"output.raw");
 			console.log(blob);
-			self.sendToAll(blob);
+			self.sendToAPI(blob);
 			self.rec.clear();
 		});
 
@@ -244,48 +246,33 @@ var mode_stt_cloud = {
 			mode: this.name,
 			body: "stop"
 		};
-		this.sendToAll(JSON.stringify(stop_message));
+		this.sendToAPI(JSON.stringify(stop_message));
 
 		clearInterval(intervalKey);
 	},
 
 	//stt cloud modeは音声認識とweb socketでのbloadcastを同時にやってるので，このメソッドは使わない
-	receive : function(message, userName) {
-		console.log('receive in stt');
-		console.log('message: ' + message + ' userName: ' + userName);
-		console.log(this.nowRecognition);
-
-		var textLog = $('#console');
-		var p = $('<p>').attr('style','word-wrap: break-word;').html(message);
-		var div = $('<div>');
-		var wrapdiv = $('<div>');
-
-		if(userName === FW.userID){
-			//吹き出し生成
-			div.attr('class','balloon balloon-2-right');
-			//それを中央寄りにする
-			wrapdiv.attr('class','wrap-right');
-		}else{
-			div.attr('class','balloon balloon-1-left');
-			wrapdiv.attr('class','wrap-left');
-		}
-		div.append(p);
-		wrapdiv.append(div);
-		textLog.append(wrapdiv);
-
-		while (textLog.children().length > 25) {
-			textLog.children().first().remove();
-		}
-		textLog.scroll(textLog.prop('scrollHeight'));
+	receive : function(message) {
+		message.body = JSON.parse(message.body);
+		this.makeFukidashi(message);
 	},
 
 	//stt cloud modeは音声認識とweb socketでのbloadcastを同時にやってるので，このメソッドは使わない
-	sendToAll : function(message) {
+	sendToAPI : function(message) {
+		// /MMSVS/cloudspeechへ
 		//todo:
-		console.log('sent to all from stt mode');
+		console.log('sent to api from stt mode');
 		this.webSocket.send(message);
 		// FW.sendObjectToAll(this.name, message);
 		//Chat.socket.send(message);
+		console.log('sending' + message);
+	},
+
+	//本来は使わなくてよいメソッドだが，決め打ちスクリプト配信用に使用する
+	sendToAll : function(message) {
+		// /MMSVS/websocketへ
+		console.log('sent to all from stt mode');
+		FW.sendToAll(message);
 		console.log('sending' + message);
 	},
 
@@ -296,5 +283,56 @@ var mode_stt_cloud = {
             .append($('<div>').attr('id', 'console'));
 
 		$('.main_view', this.view).append(text_console);
+	},
+	makeFukidashi: function(data){
+		var textLog = $('#console');
+		var p = $('<p>').attr('style','word-wrap: break-word;').attr('id', data.body.recognitionId).html(data.body.text);
+		var div_chat = $('<div>');
+		var div_hukidashi = $('<div>');
+		var wrapdiv = $('<div>');
+
+		console.log("userName is " + data.userName);
+		console.log("FW.userID is " + FW.userID);
+
+		if(data.userName === FW.userID){
+			console.log("i'm speaking");
+			//吹き出し生成
+			div_chat.attr('class','chat-area');
+			div_hukidashi.attr('class','chat-my-hukidashi');
+			//それを中央寄りにする
+			wrapdiv.attr('class','wrap-right');
+			div_hukidashi.append(p);
+			div_chat.append(div_hukidashi);
+			wrapdiv.append(div_chat);
+		}else{
+			console.log("someone is speaking");
+			var div_face = $('<div>').attr('class', 'chat-face');
+
+			var img_url = './assets/images/tmp/hatena.jpg';
+			if(data.userName in FW.user_img){
+				img_url = FW.user_img[data.userName];
+			}
+
+			var img_face = $('<img>')
+				.attr('width', '60')
+				.attr('height', '60')
+				.attr('src', img_url);
+
+			div_chat.attr('class','chat-area');
+			div_hukidashi.attr('class','chat-hukidashi someone');
+			wrapdiv.attr('class','wrap-left');
+			div_hukidashi.append(p);
+			div_chat.append(div_hukidashi);
+			div_face.append(img_face);
+			wrapdiv.append(div_face).append(div_chat);
+		}
+
+		textLog.append(wrapdiv);
+
+		while (textLog.children().length > 25) {
+			textLog.children().first().remove();
+		}
+		textLog.scroll(textLog.prop('scrollHeight'));
 	}
+
 };
