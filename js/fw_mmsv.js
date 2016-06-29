@@ -132,11 +132,22 @@ var FW = {
 
 			return;
 		}
+
+		for(var i in this.modes){
+			if(this.modes[i].name === data.mode || this.modes[i].common_name === data.mode){
+				console.log("receive message for " + this.modes[i].name);
+				this.modes[i].receive(data);
+			}
+		}
 	},
 	//websocketにデータを送信
-	sendToAll: function(mode_name, message){
+	// sendToAll: function(mode_name, message){
+	// 	console.log('send to all from FW');
+	// 	Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
+	// },
+	sendToAll: function(message){
 		console.log('send to all from FW');
-		Chat.socket.send(message + ',' + this.userID + ',' + mode_name);
+		Chat.socket.send(JSON.stringify(message));
 	},
 
 	//tmp実装：websocketにデータをオブジェクトの形式で送信
