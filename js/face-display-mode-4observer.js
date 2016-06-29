@@ -77,17 +77,16 @@ var mode_face_display_for_observer = {
 	},
 
 	receiveFromNjs : function(message) {
-		console.log(message);
+		// console.log(message);
 
 		if(!(message.userName in this.contexts)){
 			var video = $('<video>')
-				.attr('id', 'v')
 				.attr('width', '320')
 				.attr('height', '240')
 				.hide();
 
 			var canvas = $('<canvas>')
-				.attr('id', 'c')
+				.attr('class', 'col-md-4 column')
 				.attr('width', '320')
 				.attr('height', '240');
 
@@ -111,7 +110,6 @@ var mode_face_display_for_observer = {
 			self.streams[message.userName] = self.client.createStream({room: "room_" + message.userName, type: 'read'});
 			self.streams[message.userName].on('data', function(data) {
 				if(self.state == 'running'){
-					console.log('in stream0 state is '+self.state);
 					self.receiveFromNjs(data);
 				}
 			});

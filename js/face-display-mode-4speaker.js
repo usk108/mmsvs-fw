@@ -79,15 +79,15 @@ var mode_face_display_for_speaker = {
 	arrangeView: function(){
 		console.log('xmodal: arrange view');
 		var video = $('<video>')
-		.attr('id', 'v')
-		.attr('width', '320')
-		.attr('height', '240');
+			.attr('id', 'v')
+			.attr('width', '320')
+			.attr('height', '240');
 
 		var canvas = $('<canvas>')
-		.attr('id', 'c')
-		.attr('width', '320')
-		.attr('height', '240')
-		.hide();
+			.attr('id', 'c')
+			.attr('width', '320')
+			.attr('height', '240')
+			.hide();
 
 		$('.main_view', this.view).append(video).append(canvas);
 	},
