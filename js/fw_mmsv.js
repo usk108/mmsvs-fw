@@ -88,11 +88,15 @@ var FW = {
 		if(stable_config.btn.needStop)
 			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
-		var view = $('<div>')
-			.attr('id', name)
+		var mainw = $('<div>')
+			.attr('class', 'main_view_wrapper')
 			.append(mode_name)
 			.append(mainf)
 			.append(cbar);
+
+		var view = $('<div>')
+			.attr('id', name)
+			.append(mainw)
 		view.appendTo('#modes-container');
 		return view;
 	},
@@ -242,7 +246,7 @@ var FW = {
 				.attr('class', 'col-md-5 column');
 
 			$('#image_search')
-				.attr('class', 'col-md-5 col-md-offset-7');
+				.attr('class', 'col-md-5');
 
 			$("#face_display_for_observer").after($("#image_search")).after($("#stt_cloud"));
 
@@ -259,7 +263,7 @@ var FW = {
 				.attr('class', 'col-md-5 column');
 
 			$('#dictionary')
-				.attr('class', 'col-md-5 col-md-offset-7');
+				.attr('class', 'col-md-5');
 
 			$("#face_display_for_observer").after($("#dictionary")).after($("#stt_cloud"));
 
@@ -295,10 +299,12 @@ $('.show-mode-manage-sidebar').click(function() {
 	console.log('show mode manage sidebar');
 	console.log(FW.sidebar_flag);
 	if (FW.sidebar_flag) {
+		$("#sidebar-button").html("閉じる");
 		$(".wrapper").animate({
 			left: 0
 		});
 	} else {
+		$("#sidebar-button").html("モード管理");
 		$(".wrapper").animate({
 			left: -300
 		});
