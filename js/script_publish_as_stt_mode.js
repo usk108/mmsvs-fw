@@ -31,16 +31,26 @@ var mode_script_publish_as_stt = {
 		this.attachEvents();
 		this.arrangeView();
 
+		// ユーザーがいるように見せる
+		var users = ['someone', 'toba', 'toba2', 'shin'];
+		for(var i = 0; i < users.length; i++){
+			FW.sendObjectToAll("user_register", users[i]);
+		}
 
-		var raw_scripts = "勉強会をやろうと思うんですが，どう思いますか？," +
-			"私は賛成です．," +
-			"僕は反対ですね．," +
-			"excelを使ったことがありますか？," +
-			"はい、あります。";
-		var scripts = raw_scripts.split(",");
+		var raw_sentences = "toba,勉強会をやろうと思うんですが，どう思いますか？\n" +
+			"shin,私は賛成です．\n" +
+			"toba2,僕は反対ですね．\n" +
+			"toba,excelを使ったことがありますか？\n" +
+			"shin,はい、あります。\n";
+		var sentences = raw_sentences.split("\n");
 
 		for(var i = 0; i < 5; i++){
-			var script = scripts[i];
+			var sentence = sentences[i].split(",");
+			var speaker = sentence[0];
+			var script = sentence[1];
+
+			var s = $('<span>')
+				.html(speaker);
 
 			var p = $('<p>')
 				.attr('style','word-wrap: break-word;')
@@ -54,6 +64,7 @@ var mode_script_publish_as_stt = {
 
 			var script_container = $('<div>')
 				.attr('class', 'script-container')
+				.append(s)
 				.append(p)
 				.append(btn);
 
@@ -69,7 +80,7 @@ var mode_script_publish_as_stt = {
 				};
 
 				var script_message = {
-					userName: FW.userID,
+					userName: $(this).parent().children("span").html(),
 					mode: mode_stt_cloud.name,
 					body: JSON.stringify(message_body)
 				};
