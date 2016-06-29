@@ -32,8 +32,15 @@ var mode_script_publish_as_stt = {
 		this.arrangeView();
 
 
-		for(var i = 0; i < 10; i++){
-			var script = "こんにちは";
+		var raw_scripts = "勉強会をやろうと思うんですが，どう思いますか？," +
+			"私は賛成です．," +
+			"僕は反対ですね．," +
+			"excelを使ったことがありますか？," +
+			"はい、あります。";
+		var scripts = raw_scripts.split(",");
+
+		for(var i = 0; i < 5; i++){
+			var script = scripts[i];
 
 			var p = $('<p>')
 				.attr('style','word-wrap: break-word;')
