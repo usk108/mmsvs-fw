@@ -97,7 +97,7 @@ var mode_face_display_for_observer = {
 			this.contexts[message.userName] = canvas[0].getContext('2d');
 		}
 
-		var t = this.contexts[message.userName].getImageData(0,0, 200, 1600);
+		var t = this.contexts[message.userName].getImageData(0,0, 320, 240);
 		t.data.set(new Uint8ClampedArray(message.body));
 		this.contexts[message.userName].putImageData(t, 0, 0);
 	},
