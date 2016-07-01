@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MMSVS-prototype-</title>
+    <link rel="stylesheet" href="css/balloon.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+
+<body>
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websockets rely on Javascript being enabled. Please enable Javascript and reload this page!</h2>
+    </noscript>
+
+
+    <div class="wrapper">
+        <div class="sidebar">
+            <div>
+                <h3>モード管理</h3>
+                <ul>
+                    <li>
+                        用語解説モード</br>
+                        <button type="button" id="add_mode_dictionary" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_mode_dictionary" class="btn btn-danger">削除</button>
+                    </li>
+                    <li>
+                        画像検索モード</br>
+                        <button type="button" id="add_mode_image_search" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_mode_image_search" class="btn btn-danger">削除</button>
+                    </li>
+                    <li>
+                        音声認識チャットモード</br>
+                        <button type="button" id="add_mode_stt" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_mode_stt" class="btn btn-danger">削除</button>
+                    </li>
+                    <li>
+                        Cloud Speech APIのテスト用モード</br>
+                        <button type="button" id="add_mode_stt_cloud" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_mode_stt_cloud" class="btn btn-danger">削除</button>
+                    </li>
+                    <li>
+                        顔表示モード（見る人用）</br>
+                        <button type="button" id="add_fd4obsr_mode" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_fd4obsr_mode" class="btn btn-danger">削除</button>
+                    </li>
+                    <li>
+                        顔表示モード（話し手用）</br>
+                        <button type="button" id="add_fd4spkr_mode" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_fd4spkr_mode" class="btn btn-danger">削除</button>
+                    </li>
+                    <li>
+                        スクリプト配信モード</br>
+                        <button type="button" id="add_script_mode" class="btn btn-primary">追加</button>
+                        <button type="button" id="delete_script_mode" class="btn btn-danger">削除</button>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <h4>簡易ユーザー認証</h4>
+                <div>
+                    <label>名前：<input type="text" name="user_name" size="20" maxlength="10" id="user_name"></label>
+                    <button type="button" id="submit_user_name">登録</button>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <h4>サンプル文字列</h4>
+                <ul>
+                    <li>クラウドコンピューティング</li>
+                    <li>フレームワーク</li>
+                    <li>カナダ</li>
+                </ul>
+            </div>
+        </div>
+        <div class="contents">
+            <h3 class="text-center">
+                Multi-Modal Speech Visualization Service -prototype-
+            </h3>
+            <button type="button" id="sidebar-button" class="show-mode-manage-sidebar">モード管理</button>
+            <div id="modes-container">
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/src/recorder.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/buttons.js"></script>
+    <script src="js/dictionary_mode.js"></script>
+    <script src="js/image_search_mode.js"></script>
+    <script src="js/stt_mode.js"></script>
+    <script src="js/stt_cloud_mode.js"></script>
+    <script src="js/binary.js"></script>
+    <script src="js/face-display-mode-4observer.js"></script>
+    <script src="js/face-display-mode-4speaker.js"></script>
+    <script src="js/script_publish_as_stt_mode.js"></script>
+    <script src="js/fw_mmsv.js"></script>
+    <script src="js/websocket.js"></script>
+    <script>
+        //$mmsvs.initialize();
+        // $('#connectBtn').click(function() {
+
+            //})
+    </script>
+</body>
+</html>
