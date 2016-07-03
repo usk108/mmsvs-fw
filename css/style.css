@@ -159,6 +159,7 @@ input#chat {
 /* dictionary mode */
 #main_view_dictionary{
     height: 15vh;
+    overflow: auto;
 }
 
 #word-explanation-area {
@@ -181,6 +182,26 @@ video {
 
 .col-md-6 {
     text-align: center;
+}
+
+.searchmatch {
+    display:inline-block;
+    padding:.1em;
+    background:#ffeb00;
+    border-radius:2px;
+    font-weight:bold;
+}
+
+.result-title {
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.result-wrapper {
+    margin-bottom: 2px;
+    border: solid;
+    padding: 1px;
+    border-color: #ccc;
 }
 
 

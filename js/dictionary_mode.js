@@ -53,22 +53,46 @@ var mode_dictionary = {
 	        return;
 	    }
 
-        console.log("selected word is "+this.target_word);
-        var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&explaintext&format=json&rawcontinue=continue&titles=' + this.target_word;
-        var detail;
-        var self = this;
-        $.ajax({
-            type: "get",
-            dataType: "jsonp",
-            url: wikiurl,
-            success: function(json) {
-                var jsonString = json.query.pages;
-                for (var first in jsonString) break;
-                console.log("json is ",jsonString[first].extract);
-                self.output_area.text(jsonString[first].extract);
-                self.target_word = '';
-            }
-        });
+        // console.log("selected word is "+this.target_word);
+        // var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&explaintext&format=json&rawcontinue=continue&titles=' + this.target_word;
+        // var detail;
+        // var self = this;
+        // $.ajax({
+        //     type: "get",
+        //     dataType: "jsonp",
+        //     url: wikiurl,
+        //     success: function(json) {
+        //         var jsonString = json.query.pages;
+        //         for (var first in jsonString) break;
+        //         console.log("json is ",jsonString[first].extract);
+        //         self.output_area.text(jsonString[first].extract);
+        //         self.target_word = '';
+        //     }
+        // });
+
+		console.log("selected word is "+this.target_word);
+		var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&srsearch=' + this.target_word;
+		var detail;
+		var self = this;
+		$.ajax({
+			type: "get",
+			dataType: "jsonp",
+			url: wikiurl,
+			success: function(json) {
+				var results = json.query.search;
+				$('.result-wrapper').remove();
+				for(var i = 0; i < 3; i++){
+					self.output_area.append(
+						$('<div>')
+							.attr('class', 'result-wrapper')
+							.append($('<h4>').attr('class', 'result-title').html(results[i].title))
+							.append($('<p>').html(results[i].snippet+'...'))
+					);
+				}
+				self.target_word = '';
+			}
+		});
+
 	},
 	// websocket送信処理
 	stream: function(){
