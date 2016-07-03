@@ -100,14 +100,33 @@
     <script src="js/binary.js"></script>
     <script src="js/face-display-mode-4observer.js"></script>
     <script src="js/face-display-mode-4speaker.js"></script>
-    <script src="js/script_publish_as_stt_mode.js"></script>
     <script src="js/fw_mmsv.js"></script>
     <script src="js/websocket.js"></script>
+    <script src="js/script_publish_as_stt_mode.js"></script>
     <script>
-        //$mmsvs.initialize();
-        // $('#connectBtn').click(function() {
+        $(window).load(function(){
+//            function pausecomp(millis)
+//            {
+//                var date = new Date();
+//                var curDate = new Date();
+//
+//                while(curDate - date < millis){
+//                    curDate = new Date();
+//                }
+//            }
+//
+//
+//
+            var conf = {
+                streamInterval: null,
+            };
 
-            //})
+            console.log("adding STT_cloud");
+            FW.addMode(mode_stt_cloud, conf);
+
+//            console.log("adding script");
+//            FW.addMode(mode_script_publish_as_stt, conf);
+        });
     </script>
 </body>
 </html>

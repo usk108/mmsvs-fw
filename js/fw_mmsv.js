@@ -38,7 +38,7 @@ var FW = {
 		this.total_modes.push(m);
 
 		// モードごとのviewの作成
-		m.view = this.createNewFrame(m.name, m.nameJapanese, m.stable_config);
+		m.view = this.createNewFrame(m.name, m.nameJapanese, m.stable_config, m.config.student);
 		m.output_area = $('.main_view', m.view);
 
 
@@ -71,7 +71,7 @@ var FW = {
 	},
 
 	//共通部分のview作成
-	createNewFrame: function(name, nameJapanese, stable_config) {
+	createNewFrame: function(name, nameJapanese, stable_config, isStudent) {
 		var mode_name = $('<h4>').html(nameJapanese);
 
 		var mainf = $('<div>')
@@ -81,18 +81,22 @@ var FW = {
 			.attr('height', stable_config.view.height);
 		//TODO: width, heightはcssに分離
 
-		var cbar = $('<div>')
-			.append($('<input>').attr('type', 'button').attr('value', 'config'));
-		if(stable_config.btn.needRun)
-			cbar.append($('<input>').attr('type', 'button').attr('value', 'run').attr('class', 'run'))
-		if(stable_config.btn.needStop)
-			cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'))
 
 		var mainw = $('<div>')
 			.attr('class', 'main_view_wrapper')
 			.append(mode_name)
-			.append(mainf)
-			.append(cbar);
+			.append(mainf);
+
+		if(isStudent == null){
+			var cbar = $('<div>');
+			// .append($('<input>').attr('type', 'button').attr('value', 'config'));
+			if(stable_config.btn.needRun)
+				cbar.append($('<input>').attr('type', 'button').attr('value', 'run').attr('class', 'run'));
+			if(stable_config.btn.needStop)
+				cbar.append($('<input>').attr('type', 'button').attr('value', 'stop').attr('class', 'stop'));
+
+			mainw.append(cbar);
+		}
 
 		var view = $('<div>')
 			.attr('id', name)
