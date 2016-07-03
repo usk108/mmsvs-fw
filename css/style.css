@@ -204,6 +204,9 @@ video {
     border-color: #ccc;
 }
 
+#dictionary_form{
+    margin: -2.25em 160px 10px;
+}
 
 /* face mode mode */
 #main_view_face_display_for_observer{
