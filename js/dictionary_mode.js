@@ -3,7 +3,7 @@ var mode_dictionary = {
 	// モード名
 	name: 'dictionary',
 	// モード名(日本語)
-	nameJapanese: '用語解説モード',
+	nameJapanese: 'Wikipedia解説モード',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -17,7 +17,8 @@ var mode_dictionary = {
 		btn: {
 			needRun:true ,	//Runボタンが必要か
 			needStop:false	//Stopボタンが必要か
-		}
+		},
+		btn_name: null
 	},
 
 	//独自のフィールド
