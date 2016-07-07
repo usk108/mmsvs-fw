@@ -25,6 +25,18 @@ var mode_script_publish_as_stt = {
 	recognition : null,
 	nowRecognition : false,
 
+
+	scripts : {},
+	//シナリオごとの発言数
+	script_num : {
+		"a1":12,
+		"a2":17,
+		"a3":11,
+		"b1":13,
+		"b2":12,
+		"b3":9
+	},
+
 	init : function(modeconfig) {
 		var self = this;
 
@@ -37,58 +49,18 @@ var mode_script_publish_as_stt = {
 			FW.sendObjectToAll("user_register", users[i]);
 		}
 
-		var raw_sentences = "toba,勉強会をやろうと思うんですが，どう思いますか？\n" +
-			"shin,私は賛成です．\n" +
-			"toba2,僕は反対ですね．\n" +
-			"toba,excelを使ったことがありますか？\n" +
-			"shin,はい、あります。\n";
-		var sentences = raw_sentences.split("\n");
-
-		for(var i = 0; i < 5; i++){
-			var sentence = sentences[i].split(",");
-			var speaker = sentence[0];
-			var script = sentence[1];
-
-			var s = $('<span>')
-				.html(speaker);
-
-			var p = $('<p>')
-				.attr('style','word-wrap: break-word;')
-				.html(script);
-
-			//type="button" id="add_mode_stt_cloud" class="btn btn-primary"
-			var btn = $('<button>')
-				.attr('type','button')
-				.attr('class','btn btn-info')
-				.html("配信");
-
-			var script_container = $('<div>')
-				.attr('class', 'script-container')
-				.append(s)
-				.append(p)
-				.append(btn);
-
-			btn.click(function (){
-				var script_to_send = $(this).parent().children("p").html();
-				console.log(script_to_send);
-
-				var message_body = {
-					recognitionId: new Date().getTime(),
-					text: script_to_send,
-					confidence: 1.0,
-					isFinal: true
-				};
-
-				var script_message = {
-					userName: $(this).parent().children("span").html(),
-					mode: mode_stt_cloud.name,
-					body: JSON.stringify(message_body)
-				};
-				self.sendToAll(script_message);
-			});
-
-			$('#scripts-container').append(script_container);
-		}
+		this.getRecognizedScriptCSV("a1");
+		this.getIdealScriptCSV("a1");
+		this.getRecognizedScriptCSV("a2");
+		this.getIdealScriptCSV("a2");
+		this.getRecognizedScriptCSV("a3");
+		this.getIdealScriptCSV("a3");
+		this.getRecognizedScriptCSV("b1");
+		this.getIdealScriptCSV("b1");
+		this.getRecognizedScriptCSV("b2");
+		this.getIdealScriptCSV("b2");
+		this.getRecognizedScriptCSV("b3");
+		this.getIdealScriptCSV("b3");
 
 		console.log('initialized');
 	},
@@ -116,5 +88,130 @@ var mode_script_publish_as_stt = {
 			.attr('id', 'scripts-container');
 
 		$('.main_view', this.view).append(scripts_container);
+	},
+
+	getRecognizedScriptCSV: function(filename){
+		var self = this;
+		var req = [];
+		this.scripts[filename] = {};
+
+		var i;
+
+		for(i = 0; i < self.script_num[filename]; i++){
+			console.log(filename + '/' + i + ' is loading.');
+			req[i] = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+			req[i].open("get", './assets/recognized_scripts/' + filename + '/' + i + '.csv', true); // アクセスするファイルを指定
+			req[i].send(null); // HTTPリクエストの発行
+
+			req[i].onload = self.createCallback(filename, i, req[i]);
+		}
+	},
+	setRecognizedScripts: function(csv, filename, sentenceId){
+		console.log(filename + '/' + sentenceId + ' is loaded.');
+		var self = this;
+
+		this.scripts[filename][sentenceId] = []; // 最終的な二次元配列を入れるための配列
+		var tmp = csv.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+
+		for(var i = 0; i < tmp.length; ++i){
+			self.scripts[filename][sentenceId][i] = tmp[i].split(',');
+		}
+	},
+	createCallback: function(filename, i, req){
+		var self = this;
+		return function(){
+			console.log(filename + '/' + i + ' is loaded.');
+			self.setRecognizedScripts(req.responseText, filename, i); // 渡されるのは読み込んだCSVデータ
+		}
+	},
+	getIdealScriptCSV: function(filename){
+		var self = this;
+		var req = [];
+		this.scripts[filename] = {};
+
+		var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+		req.open("get", './assets/ideal_scripts/' + filename + '.csv', true); // アクセスするファイルを指定
+		req.send(null); // HTTPリクエストの発行
+
+		// レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ
+		req.onload = function(){
+			self.showScripts(req.responseText, filename); // 渡されるのは読み込んだCSVデータ
+		}
+	},
+	showScripts: function(csv, filename){
+		var self = this;
+
+		var sentences = csv.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+
+		//i はsentenc
+		for(var sentence_number = 0; sentence_number < sentences.length; ++sentence_number){
+			var sentence = sentences[sentence_number].split(",");
+			var speaker = sentence[1];
+			var script = sentence[2];
+
+			var s = $('<span>')
+				.html(speaker);
+
+			var p = $('<p>')
+				.attr('style','word-wrap: break-word;')
+				.html(script);
+
+			//type="button" id="add_mode_stt_cloud" class="btn btn-primary"
+			var btn = $('<button>')
+				.attr('type','button')
+				.attr('class','btn btn-info')
+				.html("配信");
+
+			var script_container = $('<div>')
+				.attr('class', 'script-container')
+				.append(s)
+				.append(p)
+				.append(btn);
+
+			btn.click(
+				self.createBtnClickCallback(filename, speaker, sentence_number)
+			);
+
+			$('#scripts-container').append(script_container);
+		}
+	},
+	publishScript: function(speaker, recognitionId, script){
+		console.log(script);
+
+		var message_body = {
+			recognitionId: recognitionId,
+			text: script,
+			confidence: 1.0,
+			isFinal: true
+		};
+
+		var script_message = {
+			userName: speaker,
+			mode: mode_stt_cloud.name,
+			body: JSON.stringify(message_body)
+		};
+		this.sendToAll(script_message);
+	},
+	createBtnClickCallback: function(filename, speaker, sentence_number){
+		var self = this;
+		return function (){
+			for(var recognition_number = 0; recognition_number < self.scripts[filename][sentence_number].length; recognition_number++){
+				window.setTimeout(
+					self.createPublishScriptCallback,
+					self.scripts[filename][sentence_number][recognition_number][2],
+					speaker, filename, sentence_number, recognition_number
+				);
+			}
+		}
+
+	},
+	createPublishScriptCallback: function(speaker, filename, sentence_number, recognition_number){
+		var self = mode_script_publish_as_stt;
+		return self.publishScript(
+			speaker,
+			self.scripts[filename][sentence_number][recognition_number][0],
+			self.scripts[filename][sentence_number][recognition_number][1]
+		)
 	}
+
 };
