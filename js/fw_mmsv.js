@@ -301,6 +301,18 @@ var FW = {
 				.attr('class', 'col-md-6 column');
 			return;
 		}
+
+		if(mode_names === "face_display_for_speaker-script_publish_as_stt-stt_cloud"){
+			$('#stt_cloud')
+				.attr('class', 'col-md-4 column');
+			$('#script_publish_as_stt')
+				.attr('class', 'col-md-4 column');
+			$('#face_display_for_speaker')
+				.attr('class', 'col-md-4 column');
+			return;
+		}
+
+
 	}
 
 };

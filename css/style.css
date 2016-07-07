@@ -231,3 +231,7 @@ canvas {
     padding: 10px;
 }
 
+#main_view_script_publish_as_stt{
+     height: 80vh;
+     overflow-y: auto;
+}
