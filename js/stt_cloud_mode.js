@@ -19,6 +19,9 @@ var mode_stt_cloud = {
 		btn: {
 			needRun:true ,	//Runボタンが必要か
 			needStop:true 	//Stopボタンが必要か
+		},
+		btn_name: {
+			run: '認識開始'
 		}
 	},
 
@@ -107,10 +110,10 @@ var mode_stt_cloud = {
 
 				console.log('body: ' + data.body + ' userName: ' + data.userName);
 
-				if(document.getElementById(data.body.recognitionId) != null){
-					$('#'+data.body.recognitionId).html(data.body.text);
-					return;
-				}
+				// if(document.getElementById(data.body.recognitionId) != null){
+				// 	$('#'+data.body.recognitionId).html(data.body.text);
+				// 	return;
+				// }
 
 				self.makeFukidashi(data);
                 //
@@ -291,6 +294,12 @@ var mode_stt_cloud = {
 		$('.main_view', this.view).append(text_console);
 	},
 	makeFukidashi: function(data){
+		if(document.getElementById(data.body.recognitionId) != null){
+			$('#'+data.body.recognitionId).html(data.body.text);
+			$('#console').animate({scrollTop: $('#console')[0].scrollHeight}, 'fast');
+			return;
+		}
+
 		var textLog = $('#console');
 		var p = $('<p>').attr('style','word-wrap: break-word;').attr('id', data.body.recognitionId).html(data.body.text);
 		var div_chat = $('<div>');
@@ -335,10 +344,12 @@ var mode_stt_cloud = {
 
 		textLog.append(wrapdiv);
 
-		while (textLog.children().length > 25) {
-			textLog.children().first().remove();
-		}
+		// while (textLog.children().length > 25) {
+		// 	textLog.children().first().remove();
+		// }
+
 		textLog.scroll(textLog.prop('scrollHeight'));
+		$('#console').animate({scrollTop: $('#console')[0].scrollHeight}, 'fast');
 	}
 
 };

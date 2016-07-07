@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MMSVS-prototype-</title>
+    <link rel="stylesheet" href="css/balloon.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+
+<body>
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websockets rely on Javascript being enabled. Please enable Javascript and reload this page!</h2>
+    </noscript>
+
+
+    <div class="wrapper">
+        <div class="contents">
+            <h3 class="text-center">
+                Multi-Modal Speech Visualization Service -prototype-
+            </h3>
+            <div id="modes-container">
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/src/recorder.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/buttons.js"></script>
+    <script src="js/dictionary_mode.js"></script>
+    <script src="js/image_search_mode.js"></script>
+    <script src="js/stt_mode.js"></script>
+    <script src="js/stt_cloud_mode.js"></script>
+    <script src="js/binary.js"></script>
+    <script src="js/face-display-mode-4observer.js"></script>
+    <script src="js/face-display-mode-4speaker.js"></script>
+    <script src="js/fw_mmsv.js"></script>
+    <script src="js/websocket.js"></script>
+    <script>
+        var conf = {
+            streamInterval: null,
+            student: true
+        };
+
+        console.log("adding Dictionary");
+        FW.addMode(mode_dictionary, conf);
+
+        console.log("adding image_search");
+        FW.addMode(mode_image_search, conf);
+
+        console.log("adding STT_cloud");
+        FW.addMode(mode_stt_cloud, conf);
+
+        console.log("adding Face4Obsr");
+        FW.addMode(mode_face_display_for_observer, conf);
+    </script>
+</body>
+</html>

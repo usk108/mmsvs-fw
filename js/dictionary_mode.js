@@ -3,7 +3,7 @@ var mode_dictionary = {
 	// モード名
 	name: 'dictionary',
 	// モード名(日本語)
-	nameJapanese: '用語解説モード',
+	nameJapanese: 'Wikipedia解説モード',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -17,7 +17,8 @@ var mode_dictionary = {
 		btn: {
 			needRun:true ,	//Runボタンが必要か
 			needStop:false	//Stopボタンが必要か
-		}
+		},
+		btn_name: null
 	},
 
 	//独自のフィールド
@@ -27,6 +28,7 @@ var mode_dictionary = {
 	// 初期処理
 	init : function(modeconfig) {
 		this.attachEvents();
+		this.arrangeView();
 	},
 	// モード独自のイベント処理初期設定
 	attachEvents: function(){
@@ -36,39 +38,60 @@ var mode_dictionary = {
 			var sel = document.getSelection().toString();
 			if (!sel.length) return;
 			self.target_word = sel;
+			$('#searched_word').val(sel);
 			console.log('target text: ' + self.target_word);
 		});
 		document.body.addEventListener('keyup', function(){
 			var sel = document.getSelection().toString();
 			if (!sel.length) return;
 			self.target_word = sel;
+			$('#searched_word').val(sel);
 			console.log('target text: ' + self.target_word);
 		});
 	},
 	run : function() {
-	    console.log("selected word is "+this.target_word);
-
 	    if (this.target_word.length <= 0) {
-	        this.output_area.text("文字列が選択されていません");
-	        return;
+			var input_word = $('#searched_word').val();
+			this.target_word = input_word;
+			console.log("selected word is "+this.target_word);
+			if(input_word.length <= 0){
+				this.output_area.text("検索ワードが入力/選択されていません");
+				return;
+			}
 	    }
 
-        console.log("selected word is "+this.target_word);
-        var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&explaintext&format=json&rawcontinue=continue&titles=' + this.target_word;
-        var detail;
-        var self = this;
-        $.ajax({
-            type: "get",
-            dataType: "jsonp",
-            url: wikiurl,
-            success: function(json) {
-                var jsonString = json.query.pages;
-                for (var first in jsonString) break;
-                console.log("json is ",jsonString[first].extract);
-                self.output_area.text(jsonString[first].extract);
-                self.target_word = '';
-            }
-        });
+		console.log("selected word is "+this.target_word);
+
+		var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&srsearch=' + this.target_word;
+		var detail;
+		var self = this;
+		$.ajax({
+			type: "get",
+			dataType: "jsonp",
+			url: wikiurl,
+			success: function(json) {
+				console.log(json);
+				var results = json.query.search;
+				$('.result-wrapper').remove();
+				if(results.length === 0){
+					$('<div>', {class: 'result-wrapper'})
+						.append($('<p>').html('「' + self.target_word+'」に関する検索結果は得られませんでした'))
+						.appendTo(self.output_area);
+					return;
+				}
+				for(var i = 0; i < 3; i++){
+					$('<div>')
+						.attr('class', 'result-wrapper')
+						.append($('<h4>').attr('class', 'result-title').html(results[i].title))
+						.append($('<p>').html(results[i].snippet+'...'))
+						.appendTo(self.output_area);
+				}
+			},
+			complete: function(){
+				self.target_word = '';
+			}
+		});
+
 	},
 	// websocket送信処理
 	stream: function(){
@@ -77,5 +100,10 @@ var mode_dictionary = {
 	receive: function(){
 	},
 	arrangeView: function(){
+		var self = this;
+		$('<form>', {id: 'dictionary_form', onSubmit:'mode_dictionary.run(); return false;'})
+			.append(($('<input/>', {type: 'text', id: 'searched_word', placeholder: '検索ワードを入力/選択'})))
+			.append(($('<input/>', {type: 'submit', value: '検索'})))
+			.insertBefore(self.output_area);
 	}
 };

@@ -74,7 +74,7 @@ input#chat {
 
 /* image search mode */
 #main_view_image_search{
-    height: 15vh;
+    height: 19vh;
 }
 
 #images-list {
@@ -91,7 +91,7 @@ input#chat {
     vertical-align:top;
     white-space:normal;
 
-    height: 15vh;
+    height: 19vh;
 
     /*-moz-transition: -moz-transform 0.3s linear;*/
     /*-webkit-transition: -webkit-transform 0.3s linear;*/
@@ -107,6 +107,10 @@ input#chat {
     /*-ms-transform: scale(1.2);*/
     /*transform: scale(1.2);*/
 /*}*/
+
+#image_search_form{
+    margin: -2.25em 160px 10px;
+}
 
 
 /* stt mode */
@@ -158,7 +162,8 @@ input#chat {
 
 /* dictionary mode */
 #main_view_dictionary{
-    height: 15vh;
+    height: 19vh;
+    overflow: auto;
 }
 
 #word-explanation-area {
@@ -183,6 +188,29 @@ video {
     text-align: center;
 }
 
+.searchmatch {
+    display:inline-block;
+    padding:.1em;
+    background:#ffeb00;
+    border-radius:2px;
+    font-weight:bold;
+}
+
+.result-title {
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.result-wrapper {
+    margin-bottom: 2px;
+    border: solid;
+    padding: 1px;
+    border-color: #ccc;
+}
+
+#dictionary_form{
+    margin: -2.25em 190px 10px;
+}
 
 /* face mode mode */
 #main_view_face_display_for_observer{
