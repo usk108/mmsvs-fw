@@ -32,9 +32,9 @@ var mode_script_publish_as_stt = {
 		"a1":12,
 		"a2":17,
 		"a3":11,
-		"b1":13,
+		"b1":12,
 		"b2":12,
-		"b3":9
+		"b3":8
 	},
 
 	init : function(modeconfig) {
