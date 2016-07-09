@@ -235,3 +235,26 @@ canvas {
      height: 80vh;
      overflow-y: auto;
 }
+
+/*.publish-btn{*/
+    /*float: right;*/
+    /*margin: -25px 10px 10px;*/
+/*}*/
+
+.script-container{
+    margin: 10px;
+}
+
+.script-container p{
+    font-size: 1.3em;
+}
+
+.shin{
+    background-color: #ffadab;
+}
+
+.toba{
+    background-color: #94e9ff;
+}
+
+

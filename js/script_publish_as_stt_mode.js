@@ -150,27 +150,44 @@ var mode_script_publish_as_stt = {
 			var script = sentence[2];
 
 			var s = $('<span>')
-				.html(speaker);
+				.html(speaker + ': ');
 
 			var p = $('<p>')
 				.attr('style','word-wrap: break-word;')
 				.html(script);
 
+		    p.prepend(s);
+
 			//type="button" id="add_mode_stt_cloud" class="btn btn-primary"
 			var btn = $('<button>')
 				.attr('type','button')
-				.attr('class','btn btn-info')
+				.attr('class','btn btn-info publish-btn')
 				.html("配信");
 
-			var script_container = $('<div>')
-				.attr('class', 'script-container')
-				.append(s)
-				.append(p)
+			var script_area = $('<div>', {class: 'col-md-10 column'})
+				.append(p);
+
+			var btn_area = $('<div>', {class: 'col-md-2 column'})
 				.append(btn);
+
+			var script_container = $('<div>', {class: 'script-container'})
+				.append(script_area)
+				.append(btn_area);
+
+			if(speaker === 'toba'){
+				script_area.attr('class', 'col-md-10 column toba');
+			}else if(speaker === 'shin'){
+				script_area.attr('class', 'col-md-10 column shin');
+				btn.attr('class','btn btn-danger publish-btn');
+
+			}
 
 			btn.click(
 				self.createBtnClickCallback(filename, speaker, sentence_number)
 			);
+			btn.click(function(){
+				$(this).hide()
+			});
 
 			$('#scripts-container').append(script_container);
 		}
