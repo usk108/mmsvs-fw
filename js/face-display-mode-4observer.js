@@ -19,26 +19,15 @@ var mode_face_display_for_observer = {
 			needStop:true 	//Stopボタンが必要か
 		}
 	},
-	state: 'waiting',
 
-	//
-	room : null,
-	video : null,
-	//canvas : null,
-	context : null,
+	running: false,
 	contexts : {},
-	broadcasting : false,
-	myStream : null,
-	stream0 : null,
-	stream1 : null,
 	streams : {},
-
 	common_name: 'face_display',
 
 	client : null,
 
 	init : function(modeconfig) {
-		this.room = "demoroom";
 		var wsaddress = '192.168.0.130:443';
 		if (window.location.protocol == 'http:') {
 			this.client = new BinaryClient('ws://' + wsaddress);
@@ -50,17 +39,8 @@ var mode_face_display_for_observer = {
 	},
 
 	attachEvents : function() {
-		var self = this;
-
 		this.client.on('open', function(){
 			console.log('connection with node.js server have opened');
-
-			var message = {
-				userName: FW.userID,
-				mode: self.common_name,
-				body: "look_for_speaker"
-			};
-			self.sendToAll(message);
 		});
 	},
 
@@ -68,18 +48,17 @@ var mode_face_display_for_observer = {
 	},
 
 	run : function() {
-		this.state = 'running';
-		console.log('state is '+this.state);
+		this.running = true;
+		console.log('running is '+this.running);
 	},
 
 	stop : function() {
-		this.state = 'waiting';
+		this.running = false;
 	},
 
 	receiveFromNjs : function(message) {
-		// console.log(message);
-
 		if(!(message.userName in this.contexts)){
+			console.log('creating new frame of ' + message.userName);
 			var video = $('<video>')
 				.attr('width', '320')
 				.attr('height', '240')
@@ -107,9 +86,13 @@ var mode_face_display_for_observer = {
 		var self = this;
 
 		if(message.body == "notify_speaker"){
+			console.log('get notification from ' + message.userName);
+
+			self.running = true;
+
 			self.streams[message.userName] = self.client.createStream({room: "room_" + message.userName, type: 'read'});
 			self.streams[message.userName].on('data', function(data) {
-				if(self.state == 'running'){
+				if(self.running){
 					self.receiveFromNjs(data);
 				}
 			});

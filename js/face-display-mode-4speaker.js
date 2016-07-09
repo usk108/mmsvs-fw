@@ -36,8 +36,8 @@ var mode_face_display_for_speaker = {
 	init : function() {
 		// this.room = "demoroom";
 
-		var roomNum = Number(FW.userID.match(/\d+/)[0]) % 2;
-		this.room = "room" + roomNum;
+		// var roomNum = Number(FW.userID.match(/\d+/)[0]) % 2;
+		this.room = "room_" + FW.userID;
 		console.log("this.room is " + this.room);
 
 		var wsaddress = '192.168.0.130:443';
@@ -62,9 +62,17 @@ var mode_face_display_for_speaker = {
 		var self = this;
 		this.client.on('open', function(){
 			console.log('in attaching, client is ' + self.client);
-			// self.myStream = self.client.createStream({room: self.room, type: 'write'});
 			self.myStream = self.client.createStream({room: 'room_' + FW.userID, type: 'write'});
 			console.log('in attaching, myStream is ' + self.myStream);
+
+			var message = {
+				userName: FW.userID,
+				mode: self.common_name,
+				body: "notify_speaker"
+			};
+			self.sendToAll(message);
+
+			self.state = 'running';
 		});
 
 		// Not showing vendor prefixes or code that works cross-browser.
