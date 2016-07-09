@@ -312,9 +312,14 @@ var FW = {
 			return;
 		}
 
-
+		if(mode_names === "face_display_for_speaker-stt_cloud"){
+			$('#stt_cloud')
+				.attr('class', 'col-md-6 column');
+			$('#face_display_for_speaker')
+				.attr('class', 'col-md-6 column');
+			return;
+		}
 	}
-
 };
 
 

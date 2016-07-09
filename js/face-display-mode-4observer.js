@@ -65,7 +65,7 @@ var mode_face_display_for_observer = {
 				.hide();
 
 			var canvas = $('<canvas>')
-				.attr('class', 'col-md-4 column')
+				.attr('class', 'col-md-6 column')
 				.attr('width', '320')
 				.attr('height', '240');
 
