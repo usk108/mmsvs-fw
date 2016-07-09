@@ -15,8 +15,8 @@ var mode_script_publish_as_stt = {
 			height: 300 	//画面の縦幅
 		},
 		btn: {
-			needRun:true ,	//Runボタンが必要か
-			needStop:true 	//Stopボタンが必要か
+			needRun:false ,	//Runボタンが必要か
+			needStop:false 	//Stopボタンが必要か
 		}
 	},
 
@@ -24,6 +24,9 @@ var mode_script_publish_as_stt = {
 	output_area : null,
 	recognition : null,
 	nowRecognition : false,
+
+	talk : '',
+	user : 'someone',
 
 
 	scripts : {},
@@ -38,31 +41,56 @@ var mode_script_publish_as_stt = {
 	},
 
 	init : function(modeconfig) {
-		var self = this;
+		// var self = this;
 
 		this.attachEvents();
 		this.arrangeView();
 
+		var current_talk = window.location.href.match(/\d(a|b)/)[0];
+		this.getRecognizedScriptCSV(current_talk);
+		this.getIdealScriptCSV(current_talk);
+
+		var vars = {};
+		var param = location.search.substring(1).split('&');
+		for(var i = 0; i < param.length; i++) {
+			var keySearch = param[i].search(/=/);
+			var key = '';
+			if(keySearch != -1) key = param[i].slice(0, keySearch);
+			var val = param[i].slice(param[i].indexOf('=', 0) + 1);
+			if(key != '') vars[key] = decodeURI(val);
+		}
+
+		console.log("--------------------");
+		console.log(vars);
+
+		this.talk = vars['talk'];
+		this.user = vars['user'];
+
+
+		// this.getRecognizedScriptCSV("a1");
+		// this.getIdealScriptCSV("a1");
+		// this.getRecognizedScriptCSV("a2");
+		// this.getIdealScriptCSV("a2");
+		// this.getRecognizedScriptCSV("a3");
+		// this.getIdealScriptCSV("a3");
+		// this.getRecognizedScriptCSV("b1");
+		// this.getIdealScriptCSV("b1");
+		// this.getRecognizedScriptCSV("b2");
+		// this.getIdealScriptCSV("b2");
+		// this.getRecognizedScriptCSV("b3");
+		// this.getIdealScriptCSV("b3");
+
+		this.setButtonToNext();
+		window.setTimeout(this.notify_users, 500);
+
+		console.log('initialized');
+	},
+	notify_users: function(){
 		// ユーザーがいるように見せる
 		var users = ['someone', 'toba', 'toba2', 'shin'];
 		for(var i = 0; i < users.length; i++){
 			FW.sendObjectToAll("user_register", users[i]);
 		}
-
-		this.getRecognizedScriptCSV("a1");
-		this.getIdealScriptCSV("a1");
-		this.getRecognizedScriptCSV("a2");
-		this.getIdealScriptCSV("a2");
-		this.getRecognizedScriptCSV("a3");
-		this.getIdealScriptCSV("a3");
-		this.getRecognizedScriptCSV("b1");
-		this.getIdealScriptCSV("b1");
-		this.getRecognizedScriptCSV("b2");
-		this.getIdealScriptCSV("b2");
-		this.getRecognizedScriptCSV("b3");
-		this.getIdealScriptCSV("b3");
-
-		console.log('initialized');
 	},
 	attachEvents : function() {
 	},
@@ -229,6 +257,36 @@ var mode_script_publish_as_stt = {
 			self.scripts[filename][sentence_number][recognition_number][0],
 			self.scripts[filename][sentence_number][recognition_number][1]
 		)
+	},
+	setButtonToNext: function(){
+		var next_page = window.location.origin + window.location.pathname;
+		var next_talk;
+		switch(this.talk){
+			case '1s':
+				next_talk = '2a';
+				break;
+			case '2a':
+				next_talk = '2b';
+				break;
+			case '2b':
+				next_talk = '3a';
+				break;
+			case '3a':
+				next_talk = '3b';
+				break;
+			case '3b':
+				next_talk = 'practice';
+				break;
+			case 'practice':
+				next_talk = '1s';
+				break;
+		}
+		var btn = $('<button>')
+			.attr('type','button')
+			.attr('class','btn btn-success')
+			.attr('onClick',"location.href='" + next_page + "?user=" + this.user + "&talk=" + next_talk + "'")
+			.html('次のシナリオへ');
+		$('#scripts-container').append(btn);
 	}
 
 };
