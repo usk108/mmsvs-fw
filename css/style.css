@@ -247,6 +247,7 @@ canvas {
 
 .script-container p{
     font-size: 1.3em;
+    margin: 5px;
 }
 
 .shin{
@@ -257,4 +258,15 @@ canvas {
     background-color: #94e9ff;
 }
 
+.quiz{
+    margin: 10px;
+}
 
+.next-talk{
+    float: left;
+    margin: -3.25em 170px 10px;
+}
+
+#main_view_script_publish_as_stt>p{
+    font-size: 2em;
+}

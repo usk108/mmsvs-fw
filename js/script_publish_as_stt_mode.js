@@ -32,11 +32,11 @@ var mode_script_publish_as_stt = {
 	scripts : {},
 	//シナリオごとの発言数
 	script_num : {
-		"a1":12,
-		"a2":17,
-		"a3":11,
-		"b1":12,
-		"b2":12,
+		"1s":12,
+		"2a":17,
+		"3a":11,
+		"2b":12,
+		"3b":12,
 		"b3":8
 	},
 
@@ -45,10 +45,6 @@ var mode_script_publish_as_stt = {
 
 		this.attachEvents();
 		this.arrangeView();
-
-		var current_talk = window.location.href.match(/\d(a|b)/)[0];
-		this.getRecognizedScriptCSV(current_talk);
-		this.getIdealScriptCSV(current_talk);
 
 		var vars = {};
 		var param = location.search.substring(1).split('&');
@@ -66,6 +62,9 @@ var mode_script_publish_as_stt = {
 		this.talk = vars['talk'];
 		this.user = vars['user'];
 
+		this.getRecognizedScriptCSV(this.talk);
+		this.getIdealScriptCSV(this.talk);
+
 
 		// this.getRecognizedScriptCSV("a1");
 		// this.getIdealScriptCSV("a1");
@@ -81,6 +80,7 @@ var mode_script_publish_as_stt = {
 		// this.getIdealScriptCSV("b3");
 
 		this.setButtonToNext();
+		this.setTalkName();
 		window.setTimeout(this.notify_users, 500);
 
 		console.log('initialized');
@@ -174,8 +174,20 @@ var mode_script_publish_as_stt = {
 		//i はsentenc
 		for(var sentence_number = 0; sentence_number < sentences.length; ++sentence_number){
 			var sentence = sentences[sentence_number].split(",");
-			var speaker = sentence[1];
-			var script = sentence[2];
+			var speaker = sentence[0];
+			var script = sentence[1];
+
+			if(speaker === 'quiz'){
+				var p = $('<p>')
+					.attr('style','word-wrap: break-word;')
+					.html('クイズ' + script);
+				var script_area = $('<div>', {class: 'col-md-10 column quiz'})
+					.append(p);
+				var script_container = $('<div>', {class: 'script-container'})
+					.append(script_area);
+				$('#scripts-container').append(script_container);
+				continue;
+			}
 
 			var s = $('<span>')
 				.html(speaker + ': ');
@@ -258,6 +270,11 @@ var mode_script_publish_as_stt = {
 			self.scripts[filename][sentence_number][recognition_number][1]
 		)
 	},
+	setTalkName : function(){
+		var p = $('<p>')
+			.html('シナリオ：' + this.talk);
+		$('#main_view_script_publish_as_stt').prepend(p);
+	},
 	setButtonToNext: function(){
 		var next_page = window.location.origin + window.location.pathname;
 		var next_talk;
@@ -283,10 +300,10 @@ var mode_script_publish_as_stt = {
 		}
 		var btn = $('<button>')
 			.attr('type','button')
-			.attr('class','btn btn-success')
+			.attr('class','btn btn-success next-talk')
 			.attr('onClick',"location.href='" + next_page + "?user=" + this.user + "&talk=" + next_talk + "'")
 			.html('次のシナリオへ');
-		$('#scripts-container').append(btn);
+		$('#main_view_script_publish_as_stt').prepend(btn);
 	}
 
 };
