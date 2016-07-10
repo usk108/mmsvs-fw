@@ -230,7 +230,7 @@ var mode_stt_cloud = {
 			self.previous = self.current;
 			self.rec.exportWAV(function(blob) {
 				// self.rec.clear();
-				console.log(blob);
+				// console.log(blob);
 				self.sendToAPI(blob);
 				self.rec.clear();
 			});
@@ -242,7 +242,7 @@ var mode_stt_cloud = {
 		var self = this;
 		this.rec.exportWAV(function(blob) {
 			// Recorder.forceDownload(blob,"output.raw");
-			console.log(blob);
+			// console.log(blob);
 			self.sendToAPI(blob);
 			self.rec.clear();
 		});

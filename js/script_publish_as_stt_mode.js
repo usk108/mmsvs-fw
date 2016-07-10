@@ -32,12 +32,20 @@ var mode_script_publish_as_stt = {
 	scripts : {},
 	//シナリオごとの発言数
 	script_num : {
-		"1s":12,
-		"2a":17,
-		"3a":11,
-		"2b":12,
-		"3b":12,
-		"b3":8
+		"practice":2,
+		"1s":15,
+		"2a":20,
+		"3a":14,
+		"2b":15,
+		"3b":15
+	},
+	script_quiz : {
+		"practice":[0,1],
+		"1s":[3,7,14],
+		"2a":[7,14,19],
+		"3a":[4,8,13],
+		"2b":[5,10,14],
+		"3b":[4,9,14]
 	},
 
 	init : function(modeconfig) {
@@ -55,9 +63,6 @@ var mode_script_publish_as_stt = {
 			var val = param[i].slice(param[i].indexOf('=', 0) + 1);
 			if(key != '') vars[key] = decodeURI(val);
 		}
-
-		console.log("--------------------");
-		console.log(vars);
 
 		this.talk = vars['talk'];
 		this.user = vars['user'];
@@ -126,12 +131,22 @@ var mode_script_publish_as_stt = {
 		var i;
 
 		for(i = 0; i < self.script_num[filename]; i++){
+			if(self.script_quiz[filename].indexOf(i) >= 0){
+				continue;
+			}
 			console.log(filename + '/' + i + ' is loading.');
 			req[i] = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
 			req[i].open("get", './assets/recognized_scripts/' + filename + '/' + i + '.csv', true); // アクセスするファイルを指定
 			req[i].send(null); // HTTPリクエストの発行
 
 			req[i].onload = self.createCallback(filename, i, req[i]);
+		}
+	},
+	createCallback: function(filename, i, req){
+		var self = this;
+		return function(){
+			console.log(filename + '/' + i + ' is loaded.');
+			self.setRecognizedScripts(req.responseText, filename, i); // 渡されるのは読み込んだCSVデータ
 		}
 	},
 	setRecognizedScripts: function(csv, filename, sentenceId){
@@ -145,16 +160,9 @@ var mode_script_publish_as_stt = {
 			self.scripts[filename][sentenceId][i] = tmp[i].split(',');
 		}
 	},
-	createCallback: function(filename, i, req){
-		var self = this;
-		return function(){
-			console.log(filename + '/' + i + ' is loaded.');
-			self.setRecognizedScripts(req.responseText, filename, i); // 渡されるのは読み込んだCSVデータ
-		}
-	},
+
 	getIdealScriptCSV: function(filename){
 		var self = this;
-		var req = [];
 		this.scripts[filename] = {};
 
 		var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
