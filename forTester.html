@@ -127,8 +127,8 @@
             console.log("adding script");
             FW.addMode(mode_script_publish_as_stt, conf);
 
-            var conf2 = {streamInterval: 50};
-            FW.addMode(mode_face_display_for_speaker, conf2);
+            //なぜかすぐに追加するとうまくいかない
+            window.setTimeout("FW.addMode(mode_face_display_for_speaker, {streamInterval: 50})", 2000)
         });
     </script>
 </body>
