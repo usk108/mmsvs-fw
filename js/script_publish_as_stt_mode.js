@@ -202,7 +202,7 @@ var mode_script_publish_as_stt = {
 
 			var btn = $('<button>')
 				.attr('type','button')
-				.attr('class','btn btn-info publish-btn ' + self.user + '-btn')
+				.attr('class','btn btn-info publish-btn toba-btn')
 				.html("配信");
 
 			var script_area = $('<div>', {class: 'col-md-10 column'})
@@ -219,8 +219,7 @@ var mode_script_publish_as_stt = {
 				script_area.attr('class', 'col-md-10 column toba');
 			}else if(speaker === 'shin'){
 				script_area.attr('class', 'col-md-10 column shin');
-				btn.attr('class','btn btn-danger publish-btn');
-
+				btn.attr('class','btn btn-danger publish-btn shin-btn');
 			}
 
 			btn.click(
