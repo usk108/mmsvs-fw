@@ -27,6 +27,7 @@ var mode_script_publish_as_stt = {
 
 	talk : '',
 	user : 'someone',
+	next_script_num: 0,
 
 
 	scripts : {},
@@ -70,20 +71,6 @@ var mode_script_publish_as_stt = {
 		this.getRecognizedScriptCSV(this.talk);
 		this.getIdealScriptCSV(this.talk);
 
-
-		// this.getRecognizedScriptCSV("a1");
-		// this.getIdealScriptCSV("a1");
-		// this.getRecognizedScriptCSV("a2");
-		// this.getIdealScriptCSV("a2");
-		// this.getRecognizedScriptCSV("a3");
-		// this.getIdealScriptCSV("a3");
-		// this.getRecognizedScriptCSV("b1");
-		// this.getIdealScriptCSV("b1");
-		// this.getRecognizedScriptCSV("b2");
-		// this.getIdealScriptCSV("b2");
-		// this.getRecognizedScriptCSV("b3");
-		// this.getIdealScriptCSV("b3");
-
 		this.setButtonToNext();
 		this.setTalkName();
 		window.setTimeout(this.notify_users, 500);
@@ -98,6 +85,14 @@ var mode_script_publish_as_stt = {
 		}
 	},
 	attachEvents : function() {
+		var self = this;
+		$(window).keydown(function(e){
+			if(e.keyCode === 32){
+				$('.' + self.user + '-btn').eq(self.next_script_num).click()
+				self.next_script_num++;
+			}
+			return false;
+		});
 	},
 
 	run : function() {
@@ -179,7 +174,6 @@ var mode_script_publish_as_stt = {
 
 		var sentences = csv.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
 
-		//i はsentenc
 		for(var sentence_number = 0; sentence_number < sentences.length; ++sentence_number){
 			var sentence = sentences[sentence_number].split(",");
 			var speaker = sentence[0];
@@ -206,10 +200,9 @@ var mode_script_publish_as_stt = {
 
 		    p.prepend(s);
 
-			//type="button" id="add_mode_stt_cloud" class="btn btn-primary"
 			var btn = $('<button>')
 				.attr('type','button')
-				.attr('class','btn btn-info publish-btn')
+				.attr('class','btn btn-info publish-btn ' + self.user + '-btn')
 				.html("配信");
 
 			var script_area = $('<div>', {class: 'col-md-10 column'})
