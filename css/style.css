@@ -42,6 +42,10 @@
     background-image: none;
 }
 
+#modes-container {
+    margin: 0px 25px 20px;
+}
+
 #modes-container > div{
     padding: 10px;
     text-align: left;
@@ -74,7 +78,7 @@ input#chat {
 
 /* image search mode */
 #main_view_image_search{
-    height: 19vh;
+    height: 22vh;
 }
 
 #images-list {
@@ -91,7 +95,7 @@ input#chat {
     vertical-align:top;
     white-space:normal;
 
-    height: 19vh;
+    height: 22vh;
 
     /*-moz-transition: -moz-transform 0.3s linear;*/
     /*-webkit-transition: -webkit-transform 0.3s linear;*/
@@ -127,7 +131,7 @@ input#chat {
 .face_display_for_observer-image_search-stt_cloud #console-container,
 .dictionary-face_display_for_observer-stt_cloud #console-container,
 .dictionary-face_display_for_observer-image_search-stt_cloud #console-container {
-    height: 55vh;
+    height: 50vh;
 }
 
 #console {
@@ -162,7 +166,7 @@ input#chat {
 
 /* dictionary mode */
 #main_view_dictionary{
-    height: 19vh;
+    height: 22vh;
     overflow: auto;
 }
 
@@ -222,7 +226,7 @@ video {
 }
 
 .dictionary-face_display_for_observer-image_search-stt_cloud #main_view_face_display_for_observer {
-    height: 55vh;
+    height: 50vh;
 }
 
 
