@@ -28,7 +28,8 @@ var mode_face_display_for_observer = {
 	client : null,
 
 	init : function(modeconfig) {
-		var wsaddress = '192.168.0.130:443';
+		var wsaddress = '192.168.50.3:443';
+		// var wsaddress = '192.168.0.130:443';
 		if (window.location.protocol == 'http:') {
 			this.client = new BinaryClient('ws://' + wsaddress);
 		} else {

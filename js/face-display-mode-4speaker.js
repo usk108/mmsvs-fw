@@ -40,7 +40,8 @@ var mode_face_display_for_speaker = {
 		this.room = "room_" + FW.userID;
 		console.log("this.room is " + this.room);
 
-		var wsaddress = '192.168.0.130:443';
+		// var wsaddress = '192.168.0.130:443';
+		var wsaddress = '192.168.50.3:443';
         if (window.location.protocol == 'http:') {
             this.client = new BinaryClient('ws://' + wsaddress);
         } else {

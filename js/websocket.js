@@ -36,7 +36,8 @@ Chat.connect = (function(host) {
 });
 
 Chat.initialize = function() {
-    var ipAddress = "192.168.0.140:";
+    // var ipAddress = "192.168.0.140:";
+    var ipAddress = "192.168.50.4:";
     var path = "/MMSVS/websocket";
     if (window.location.protocol == 'http:') {
         //Chat.connect('ws://' + window.location.host + '/examples/websocket/tc7/chat');

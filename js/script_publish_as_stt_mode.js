@@ -78,11 +78,9 @@ var mode_script_publish_as_stt = {
 		console.log('initialized');
 	},
 	notify_users: function(){
+		var self = mode_script_publish_as_stt;
 		// ユーザーがいるように見せる
-		var users = ['someone', 'toba', 'toba2', 'shin'];
-		for(var i = 0; i < users.length; i++){
-			FW.sendObjectToAll("user_register", users[i]);
-		}
+		FW.sendObjectToAll("user_register", self.user);
 	},
 	attachEvents : function() {
 		var self = this;
