@@ -38,7 +38,8 @@ var mode_script_publish_as_stt = {
 		"2a":20,
 		"3a":14,
 		"2b":15,
-		"3b":15
+		"3b":15,
+		"demo":32
 	},
 	script_quiz : {
 		"practice":[0,1],
@@ -46,7 +47,8 @@ var mode_script_publish_as_stt = {
 		"2a":[7,14,19],
 		"3a":[4,8,13],
 		"2b":[5,10,14],
-		"3b":[4,9,14]
+		"3b":[4,9,14],
+		"demo":[]
 	},
 
 	init : function(modeconfig) {
@@ -277,6 +279,9 @@ var mode_script_publish_as_stt = {
 		var next_page = window.location.origin + window.location.pathname;
 		var next_talk;
 		switch(this.talk){
+			case 'demo':
+				next_talk = '1s';
+				break;
 			case '1s':
 				next_talk = '2a';
 				break;
