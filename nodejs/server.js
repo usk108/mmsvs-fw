@@ -12,7 +12,8 @@ var app = express();
 
 //pass in your express app and credentials to create an https server
 var httpsServer = https.createServer(credentials, app);
-httpsServer.listen(443, '192.168.50.3');
+// httpsServer.listen(443, '192.168.50.3');
+httpsServer.listen(443, '192.168.0.130');
 
 // ����z�M�̂��߂�Websocket����̐ݒ�iBinaryJS�̐ݒ�j
 var BinaryServer = require('binaryjs').BinaryServer;

@@ -3,7 +3,7 @@ var mode_image_search = {
 	// モード名
 	name: 'image_search',
 	// モード名(日本語)
-	nameJapanese: '画像で検索モード',
+	nameJapanese: 'Image search mode',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -92,7 +92,7 @@ var mode_image_search = {
 		var self = this;
 		$('<form>', {id: 'image_search_form', onSubmit:'mode_image_search.run(); return false;'})
 			.append(($('<input/>', {type: 'text', id: 'image_searched_word', placeholder: '検索ワードを入力/選択'})))
-			.append(($('<input/>', {type: 'submit', value: '検索'})))
+			.append(($('<input/>', {type: 'submit', value: 'submit'})))
 			.insertBefore(self.output_area);
 	},
 	//検索結果のリストをもらってそれを表示する

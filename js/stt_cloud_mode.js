@@ -59,8 +59,8 @@ var mode_stt_cloud = {
 
 		// 接続先URI
 		var uri = '';
-		// var ipAddress = "192.168.0.140:";
-		var ipAddress = "192.168.50.4:";
+		var ipAddress = "192.168.0.140:";
+		// var ipAddress = "192.168.50.4:";
 		var path = "/MMSVS/cloudspeech";
 		if (window.location.protocol == 'http:') {
 			uri = 'ws://' + ipAddress + '8080' + path;
@@ -231,7 +231,7 @@ var mode_stt_cloud = {
 			self.previous = self.current;
 			self.rec.exportWAV(function(blob) {
 				// self.rec.clear();
-				// console.log(blob);
+				console.log(blob);
 				self.sendToAPI(blob);
 				self.rec.clear();
 			});

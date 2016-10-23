@@ -3,7 +3,7 @@ var mode_dictionary = {
 	// モード名
 	name: 'dictionary',
 	// モード名(日本語)
-	nameJapanese: 'Wikipedia解説モード',
+	nameJapanese: 'Wikipedia search mode',
 	// 割り当てられたhtml
 	view: null,
 	// モード追加時に外部から与えられるモードの設定
@@ -62,7 +62,7 @@ var mode_dictionary = {
 
 		console.log("selected word is "+this.target_word);
 
-		var wikiurl = 'https://ja.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&srsearch=' + this.target_word;
+		var wikiurl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&srsearch=' + this.target_word;
 		var detail;
 		var self = this;
 		$.ajax({
@@ -103,7 +103,7 @@ var mode_dictionary = {
 		var self = this;
 		$('<form>', {id: 'dictionary_form', onSubmit:'mode_dictionary.run(); return false;'})
 			.append(($('<input/>', {type: 'text', id: 'searched_word', placeholder: '検索ワードを入力/選択'})))
-			.append(($('<input/>', {type: 'submit', value: '検索'})))
+			.append(($('<input/>', {type: 'submit', value: 'submit'})))
 			.insertBefore(self.output_area);
 	}
 };
